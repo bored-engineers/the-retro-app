@@ -1,0 +1,13 @@
+{
+  "name": "@the-retro-app/services",
+  "version": "0.0.1",
+  "description": "backend code for the retro app",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Bored Engineers",
+  "repository": {
+    "type": "git",
+    "url": "https://as-ajitsingh:leo%401508%241@github.com/bored-engineers/the-retro-app.git",
+    "directory": "packages/services"
+  }
+}
