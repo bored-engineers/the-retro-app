@@ -1,0 +1,13 @@
+{
+  "name": "@the-retro-app/webapp",
+  "version": "0.0.1",
+  "description": "Website for the retro app",
+  "main": "index.js",
+  "author": "Bored Engineers",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://as-ajitsingh:leo%401508%241@github.com/bored-engineers/the-retro-app.git",
+    "directory": "packages/webapp"
+  }
+}

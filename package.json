@@ -1,0 +1,14 @@
+{
+  "name": "the-retro-app",
+  "version": "0.0.1",
+  "description": "This repo contains main codebase for the retro app",
+  "repository": "https://as-ajitsingh:leo%401508%241@github.com/bored-engineers/the-retro-app.git",
+  "author": "Bored Engineers",
+  "license": "MIT",
+  "dependencies": {
+    "lerna": "^3.22.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
