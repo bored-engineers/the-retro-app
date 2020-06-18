@@ -6,6 +6,10 @@
   "author": "Bored Engineers",
   "private":"true",
   "license": "MIT",
+  "scripts": {
+    "build:all":"sh scripts/build-all.sh",
+    "start:server":"node dist/index.js"
+  },
   "dependencies": {
     "lerna": "^3.22.1"
   },
