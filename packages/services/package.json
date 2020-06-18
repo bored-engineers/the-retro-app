@@ -11,7 +11,7 @@
     "directory": "packages/services"
   },
   "scripts": {
-    "build": "rm -r dist && tsc",
+    "build": "rm -rf dist && tsc",
     "lint": "eslint src --ext .ts",
     "test": "jest",
     "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts"
