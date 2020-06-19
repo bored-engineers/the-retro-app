@@ -1,0 +1,36 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Testing
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out Repository
+      uses: actions/checkout@v2
+    - name: Setting up Node Environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.18.1
+    - name: Install dependencies
+      run: yarn
+    - name: Unit testing
+      run: yarn lerna run test
+  build:
+    name: Building
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out Repository
+      uses: actions/checkout@v2
+    - name: Setting up Node Environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.18.1
+    - name: Install dependencies
+      run: yarn
+    - name: Build
+      run: yarn lerna run build
