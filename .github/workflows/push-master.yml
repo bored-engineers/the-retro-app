@@ -23,7 +23,6 @@ jobs:
       run: yarn lerna run test
   build:
     name: Building
-    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Checking out Repository
@@ -33,9 +32,11 @@ jobs:
       with:
         node-version: 12.18.1
     - name: Install dependencies
-      run: yarn install --production
+      run: yarn install
     - name: Build
       run: yarn build:all
+    - name: Install production dependencies 
+      run: rm -rf node_modules && yarn install --production
     - name: Upload package.json
       uses: actions/upload-artifact@v1
       with:
