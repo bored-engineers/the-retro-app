@@ -61,6 +61,8 @@ jobs:
           name: package-json
       - name: Install production dependencies 
         run:  yarn install --production
+      - name: Initialize Git Repo
+        run: git init
       - name: Deploying 
         uses: akhileshns/heroku-deploy@v3.0.5
         with:
