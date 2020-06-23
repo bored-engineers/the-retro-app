@@ -35,18 +35,11 @@ jobs:
       run: yarn install
     - name: Build
       run: yarn build:all
-    - name: Install production dependencies 
-      run: rm -rf node_modules && yarn install --production
     - name: Upload package.json
       uses: actions/upload-artifact@v1
       with:
         name: package-json
         path: package.json
-    - name: Upload Node Modules
-      uses: actions/upload-artifact@v1
-      with:
-        name: node-modules
-        path: node_modules
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v1
       with:
@@ -62,6 +55,12 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: build-artifacts
+      - name: Downloading package.json
+        uses: actions/download-artifact@v1
+        with:
+          name: package-json
+      - name: Install production dependencies 
+        run:  yarn install --production
       - name: Deploying 
         uses: akhileshns/heroku-deploy@v3.0.5
         with:
