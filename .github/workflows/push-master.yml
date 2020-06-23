@@ -4,7 +4,7 @@ on:
   push:
     branches: 
       - master
-      - TRA-9
+      - TRA-18
 
 jobs:
   test:
