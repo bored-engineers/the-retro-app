@@ -59,6 +59,8 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: package-json
+      - name: Copying package.json to root
+        run: cp package-json/package.json package.json && rm -r package-json 
       - name: Install production dependencies 
         run:  yarn install --production
       - name: Initialize Git Repo
