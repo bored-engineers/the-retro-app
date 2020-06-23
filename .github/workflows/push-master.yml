@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: package-json
-        path: package.json
+        path: packages/webservice/package.json
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v1
       with:
@@ -63,6 +63,8 @@ jobs:
         run:  yarn install --production
       - name: Initialize Git Repo
         run: git init
+      - name: Adding all files and committing
+        run: git add . && git commit -m "deploying code"
       - name: Deploying 
         uses: akhileshns/heroku-deploy@v3.0.5
         with:

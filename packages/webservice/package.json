@@ -14,7 +14,8 @@
     "build": "rm -rf dist && tsc",
     "lint": "eslint src --ext .ts",
     "test": "jest",
-    "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts"
+    "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
+    "start": "node dist/index.js"
   },
   "standard": {
     "env": [
