@@ -4,7 +4,6 @@ on:
   push:
     branches: 
       - master
-      - TRA-18
 
 jobs:
   test:
@@ -20,9 +19,11 @@ jobs:
     - name: Install dependencies
       run: yarn
     - name: Unit testing
-      run: yarn lerna run test
+      run: yarn lerna run test --stream
+
   build:
     name: Building
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Checking out Repository
@@ -38,6 +39,7 @@ jobs:
   
   deploy:
     name: Deploying App
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checking out repository
