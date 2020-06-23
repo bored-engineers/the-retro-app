@@ -1,0 +1,70 @@
+name: Push to master
+
+on:
+  push:
+    branches: 
+      - master
+      - TRA-9
+
+jobs:
+  test:
+    name: Testing
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out Repository
+      uses: actions/checkout@v2
+    - name: Setting up Node Environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.18.1
+    - name: Install dependencies
+      run: yarn
+    - name: Unit testing
+      run: yarn lerna run test
+  build:
+    name: Building
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out Repository
+      uses: actions/checkout@v2
+    - name: Setting up Node Environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.18.1
+    - name: Install dependencies
+      run: yarn install --production
+    - name: Build
+      run: yarn build:all
+    - name: Upload package.json
+      uses: actions/upload-artifact@v1
+      with:
+        name: package-json
+        path: package.json
+    - name: Upload Node Modules
+      uses: actions/upload-artifact@v1
+      with:
+        name: node-modules
+        path: node_modules
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: build-artifacts
+        path: dist
+  
+  deploy:
+    name: Deploying App
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloading build artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: build-artifacts
+      - name: Deploying 
+        uses: akhileshns/heroku-deploy@v3.0.5
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "staging-the-retro-app"
+          heroku_email: "ajit.drag@gmail.com"
+          buildpack: "heroku/nodejs"
