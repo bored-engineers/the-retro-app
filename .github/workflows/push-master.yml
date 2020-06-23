@@ -34,41 +34,14 @@ jobs:
     - name: Install dependencies
       run: yarn install
     - name: Build
-      run: yarn build:all
-    - name: Upload package.json
-      uses: actions/upload-artifact@v1
-      with:
-        name: package-json
-        path: packages/webservice/package.json
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: build-artifacts
-        path: dist
+      run: yarn lerna run build --stream
   
   deploy:
     name: Deploying App
-    needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Downloading build artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: build-artifacts
-      - name: Downloading package.json
-        uses: actions/download-artifact@v1
-        with:
-          name: package-json
-      - name: Copying package.json to root
-        run: cp package-json/package.json package.json && rm -r package-json 
-      - name: Install production dependencies 
-        run:  yarn install --production
-      - name: Initialize Git Repo
-        run: git init
-      - name: Adding git user
-        run: git config --global user.email "32074655+as-ajitsingh@users.noreply.github.com" && git config --global user.name "Ajit Singh"
-      - name: Adding all files and committing
-        run: git add . && git commit -m "deploying code"
+      - name: Checking out repository
+        uses: actions/checkout@v2
       - name: Deploying 
         uses: akhileshns/heroku-deploy@v3.0.5
         with:
