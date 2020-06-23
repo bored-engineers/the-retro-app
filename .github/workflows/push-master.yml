@@ -63,6 +63,8 @@ jobs:
         run:  yarn install --production
       - name: Initialize Git Repo
         run: git init
+      - name: Adding git user
+        run: git config --global user.email "32074655+as-ajitsingh@users.noreply.github.com" && git config --global user.name "Ajit Singh"
       - name: Adding all files and committing
         run: git add . && git commit -m "deploying code"
       - name: Deploying 
