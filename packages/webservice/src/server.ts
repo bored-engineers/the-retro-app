@@ -1,9 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import { mainRouter } from './routes';
+import MongoDB from './db';
+import mainRouter from './routes';
 
 const server = express();
+MongoDB();
 
 server.use(bodyParser.json());
 
