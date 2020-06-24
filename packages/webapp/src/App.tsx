@@ -1,59 +1,13 @@
 import React from 'react';
-import {Grid, Card, IconButton, CardActions, CardContent} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import './App.css';
+import NavBar from './Components/Client/NavBar'
+import Board from './Components/Client/Board'
 
 function App() {
   return (
     <div>
-      <body className="App-body">
-        <Grid container spacing={1}>
-        <Grid container spacing={1}>
-          <Card>
-            <CardContent>
-              Something
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <AddIcon/>
-              </IconButton>
-            </CardActions>
-          </Card>
-          <Card>
-            <CardContent>
-              Something
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <AddIcon/>
-              </IconButton>
-            </CardActions>
-          </Card>   
-        </Grid>
-        <Grid container spacing={1}>
-          <Card>
-            <CardContent>
-              Something
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <AddIcon/>
-              </IconButton>
-            </CardActions>
-          </Card>
-          <Card>
-            <CardContent>
-              Something
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <AddIcon/>
-              </IconButton>
-            </CardActions>
-          </Card>   
-        </Grid>
-        </Grid>
-      </body>
+      <NavBar />
+      <Board />
     </div>
   );
 }
