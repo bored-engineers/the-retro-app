@@ -4,6 +4,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Link from '@material-ui/core/Link';
 import {Grid, Card, IconButton, CardActions, CardContent} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import NavBar from './NavBar'
+
 
 function Copyright() {
     return (
@@ -24,11 +26,22 @@ function Copyright() {
             backgroundColor: theme.palette.background.paper,
             padding: theme.spacing(6),
         },
+        card: {
+            margin: '10px',
+            width: 150,
+            height: 160,
+        },
+        cardcontent: {
+            fontSize: 14
+        },
+        action: {
+            alignContent: 'bottom',
+        }
     });
 });
 
   const BackgroundHead = {
-    backgroundImage: 'url(https://source.unsplash.com/random/3000x2000)',
+    backgroundImage: 'url(https://source.unsplash.com/user/bored_engineer/likes)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -39,6 +52,7 @@ function Copyright() {
 
     return (
         <div>
+            <NavBar />
           <body className="App-body" style={BackgroundHead}>
             <Grid container spacing={1}>
             <Grid container spacing={1}>
@@ -46,8 +60,8 @@ function Copyright() {
                 <CardContent>
                   Something
                 </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
+                <CardActions >
+                  <IconButton aria-label="add to favorites" className={classes.action}>
                     <AddIcon/>
                   </IconButton>
                 </CardActions>
@@ -56,7 +70,7 @@ function Copyright() {
                 <CardContent>
                   Something
                 </CardContent>
-                <CardActions disableSpacing>
+                <CardActions>
                   <IconButton aria-label="add to favorites">
                     <AddIcon/>
                   </IconButton>
@@ -68,7 +82,7 @@ function Copyright() {
                 <CardContent>
                   Something
                 </CardContent>
-                <CardActions disableSpacing>
+                <CardActions>
                   <IconButton aria-label="add to favorites">
                     <AddIcon/>
                   </IconButton>
@@ -78,7 +92,7 @@ function Copyright() {
                 <CardContent>
                   Something
                 </CardContent>
-                <CardActions disableSpacing>
+                <CardActions>
                   <IconButton aria-label="add to favorites">
                     <AddIcon/>
                   </IconButton>
