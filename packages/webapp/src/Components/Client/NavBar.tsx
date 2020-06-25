@@ -17,14 +17,17 @@ const useStyles = makeStyles((theme) => ({
     title: {
       flexGrow: 1,
     },
+    appBar: {
+      height: '56px',
+      background: 'radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(237,197,25,1) 100%);',
+    }
   }));
-
 
 const NavBar = () => {
     const classes = useStyles();
     return (
     <div>
-     <AppBar position="static">
+     <AppBar position="static" className={classes.appBar}>
             <Toolbar>
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
@@ -32,10 +35,11 @@ const NavBar = () => {
                 <Typography variant="h6" className={classes.title}>
                 The Retro App
                 </Typography> 
-                <Button color="inherit">Login</Button>  
+                <Button color="inherit">Change BG</Button>  
             </Toolbar>
 
         </AppBar>
+      
 </div>
     );
 }
