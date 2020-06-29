@@ -1,5 +1,6 @@
 import MongoDB from '../db';
 import { Db, Collection } from 'mongodb';
+import { BoardNotFoundError } from '../errors/board-errors';
 
 type BoardType = {
     boardId: string;
@@ -21,7 +22,9 @@ export default class Board {
     }
 
     public async getBoard(boardId: string): Promise<BoardType & { _id: string }> {
-        return  (await (await this.getCollection()).findOne({ boardId }));
+        const board = (await (await this.getCollection()).findOne({ boardId }));
+        if (!board) throw new BoardNotFoundError(boardId);
+        return board;
     }
 
 }
