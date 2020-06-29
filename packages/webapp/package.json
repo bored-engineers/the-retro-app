@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
-    "jest": "24.9.0"
+    "jest": "24.9.0",
+    "react-scripts": "latest"
   },
   "dependencies": {
     "@babel/core": "7.9.0",

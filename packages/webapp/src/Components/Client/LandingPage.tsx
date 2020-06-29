@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
+import { CircularProgress, Fab, TextField, Divider, Paper, Button, Grid, Box, Typography, Tabs, Tab } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
+import CheckIcon from '@material-ui/icons/Check';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
+import clsx from 'clsx';
+
 
 function TabPanel(props: { [x: string]: any; children: any; value: any; index: any; }) {
   const { children, value, index, ...other } = props;
@@ -70,12 +67,16 @@ const useStyles = makeStyles((theme) => {
             justify: 'center',
         },
         buttons: {
+            margin: '10px',
             display: 'flex',
             justifyContent: 'flex-end',
         },
         button: {
             marginTop: theme.spacing(3),
             marginLeft: theme.spacing(1),
+        },
+        createButton: {
+          marginTop: '10px',
         },
         body: {
             margin: '0',
@@ -91,7 +92,36 @@ const useStyles = makeStyles((theme) => {
         },
         grid_opac: {
             opacity: '0.8'
-        }
+        },
+        rootcreate: {
+          display: 'flex',
+          alignItems: 'center',
+      },
+      wrapper: {
+          margin: theme.spacing(1),
+          position: 'relative',
+      },
+      buttonSuccess: {
+          backgroundColor: green[500],
+          '&:hover': {
+              backgroundColor: green[700],
+          },
+      },
+      fabProgress: {
+          color: green[500],
+          position: 'absolute',
+          top: -6,
+          left: -6,
+          zIndex: 1,
+      },
+      buttonProgress: {
+          color: green[500],
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          marginTop: -12,
+          marginLeft: -12,
+      },
 
     });
 });
@@ -100,8 +130,39 @@ export default function SimpleTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const timer: any = React.useRef();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success,
+  });
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+  const handleButtonClick = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      timer.current = setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+        setTimeout(() => {
+          setValue(1);
+        }, 500);
+      }, 2000);
+    }
+  };
+
+
   const handleChange = (event: any, newValue: React.SetStateAction<number>) => {
     setValue(newValue);
+    setLoading(false);
+    setSuccess(false);
   };
 
   return (
@@ -122,21 +183,33 @@ export default function SimpleTabs() {
         </Tabs>
       <TabPanel value={value} index={0}>
       <Grid container spacing={3}>
-      <Grid item xs={12}>
-          <TextField
-            required
-            id="boardId"
-            name="boardId"
-            label="Board Id"
-            fullWidth
-            autoComplete="Board Id"
-          />
+      <Grid item>
+      <div className={classes.wrapper}>   
+        <Fab
+          aria-label="save"
+          color="secondary"
+          className={buttonClassname}
+          onClick={handleButtonClick}
+        >
+          {success ? <CheckIcon /> : <FileCopyOutlinedIcon />}
+        </Fab>
+        {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+        </div>
         </Grid>
-        <Button variant="contained"
-                    color="primary"
-                    className={classes.button}>
-        Create
+        <Grid item alignItems='baseline' className={classes.createButton}>
+        <div className={classes.wrapper}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={buttonClassname}
+          disabled={loading}
+          onClick={handleButtonClick}
+        >
+          Create New Board
         </Button>
+        {/* {loading && <CircularProgress size={24} className={classes.buttonProgress} />} */}
+        </div>
+        </Grid>
       </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -144,11 +217,21 @@ export default function SimpleTabs() {
       <Grid item xs={12}>
           <TextField
             required
+            id="userID"
+            name="userId"
+            label="Name"
+            fullWidth
+            autoComplete="Name"
+          />
+        </Grid>
+      <Grid item xs={12}>
+          <TextField
+            required
             id="boardId"
             name="boardId"
-            label="Board Id"
+            label="Board ID"
             fullWidth
-            autoComplete="Board Id"
+            autoComplete="Board ID"
           />
         </Grid>
         <Button variant="contained"
