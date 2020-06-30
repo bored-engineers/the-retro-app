@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import Tabs from './Components/Client/LandingPage'
+import LandingPage from './Components/Client/LandingPage'
 
 function App() {
 
   return (
     <div>
-      <Tabs />
+      <LandingPage />
     </div>
   );
 }
