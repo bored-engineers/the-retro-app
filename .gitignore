@@ -108,3 +108,5 @@ dist
 
 # react build folder
 **/build/
+
+packages/webservice/src/public

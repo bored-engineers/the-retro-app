@@ -24,6 +24,6 @@
             "ignoreParameters": true
           }
         ],
-        "@typescript-eslint/no-unused-vars": [{"argsIgnorePattern": "^_"}]
+        "@typescript-eslint/no-unused-vars": [2, {"argsIgnorePattern": "^_"}]
       }
 }

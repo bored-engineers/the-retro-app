@@ -1,5 +1,5 @@
-describe('Main Route', () => {
-    it('should pass', () => {
-        expect(true).toEqual(true);
-    })
+describe.skip('Main Route', () => {
+  it('should pass', () => {
+    expect(true).toEqual(true);
+  });
 });
