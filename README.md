@@ -1,3 +1,4 @@
+![Test & Build](https://github.com/bored-engineers/the-retro-app/workflows/Push%20to%20master/badge.svg)
 <div align="center"> 
 <h1>Our own Retrospective tool</h1>
 <a href="https://github.com/bored-engineers/the-retro-app">
