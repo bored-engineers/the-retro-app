@@ -1,5 +1,5 @@
-describe('Board Route', () => {
-    it('should pass', () => {
-        expect(true).toEqual(true);
-    })
+describe.skip('Board Route', () => {
+  it('should pass', () => {
+    expect(true).toEqual(true);
+  });
 });
