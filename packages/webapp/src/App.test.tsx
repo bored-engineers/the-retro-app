@@ -2,9 +2,18 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
-  // const { getByText } = render(<App />);
-  // const linkElement = getByText(/learn react/i);
-  // expect(linkElement).toBeInTheDocument();
-  expect(true).toBe(true);
+jest.mock('./Components/Client/LandingPage', () => {
+  return () => {
+    return <div data-testid='mockLandingPage'>
+      mocked landing page
+    </div>
+  }
+});
+
+describe('App', () => {
+  it('renders learn react link', () => {
+    const { getByTestId } = render(<App />);
+
+    expect(getByTestId('mockLandingPage')).toBeInTheDocument();
+  });
 });

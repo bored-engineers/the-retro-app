@@ -4,7 +4,7 @@ import config from 'config';
 let db: Db = null;
 const DB_URL = process.env.DB_URL || config.get('db.url');
 
-var DbConnection = async function () {
+var DbConnection = async function (): Promise<Db> {
     try {
         if (db != null) {
             console.log(`db connection is already alive`);
