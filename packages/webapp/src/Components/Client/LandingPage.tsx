@@ -8,7 +8,6 @@ import CheckIcon from '@material-ui/icons/Check';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import clsx from 'clsx';
 import TabPanel from './TabPanel';
-import NavBar from './NavBar';
 
 const BackgroundHead = {
   backgroundImage: 'url(https://source.unsplash.com/user/bored_engineer/likes)',
@@ -164,7 +163,6 @@ export default () => {
 
   return (
     <React.Fragment>
-      <NavBar/>
     <body id="body1" className={classes.body} style={BackgroundHead}>
       <div className={classes.root} style={BackgroundHead}>
         <Grid container component="main" className={classes.grid} direction="row" justify="center" alignItems="center">
