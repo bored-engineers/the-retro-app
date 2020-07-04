@@ -1,0 +1,77 @@
+.landingPage{
+    background-image: url(https://source.unsplash.com/user/bored_engineer/likes);
+    background-repeat: no-repeat;
+    background-size:  cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    .form{
+        max-width: 30em;
+        // background-color: transparentize($color:black, $amount: 0.5);
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding: 2vh 5vh;
+        .title-sup{
+            font-size: 14;
+
+        }
+        .title-main{
+            align-self: center;
+        }
+        .image {
+            width: 15em;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+        }
+        .create-board{
+            margin-top: 5vh;
+            margin-bottom: 1vh;
+            width: 100%;
+
+            Button{
+                width: 100%;
+
+            }
+        }
+
+        .join-board{
+            width: 100%;
+            margin-bottom: 2vh;
+
+            .join-board-title{
+                text-align: center;
+            }
+            Button{
+                margin-top: 2vh;
+                width: 100%;
+
+            }
+        }
+        hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #333;
+            color: #333;
+            overflow: visible;
+            text-align: center;
+            height: 1px;
+            margin: 20px;
+            align-self: center;
+
+            &:after {
+                width: 100%;
+                background: #fff;
+                content: 'or';
+                padding: 0 4px;
+                position: relative;
+                top: -13px;
+                
+            }
+        }
+        
+    }
+}
