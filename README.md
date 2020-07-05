@@ -2,7 +2,7 @@
 <div align="center"> 
 <h1>Our own Retrospective tool</h1>
 <a href="https://github.com/bored-engineers/the-retro-app">
-<img alt="Retro App" width="200" height="200" src="https://github.com/bored-engineers/the-retro-app/blob/master/docs/Logo.png"> </a>
+<img alt="Retro App" width="250" height="250" src="https://github.com/bored-engineers/the-retro-app/blob/master/docs/Logo.png"> </a>
 </div>
 
 ## Tools
