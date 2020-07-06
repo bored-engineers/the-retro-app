@@ -20,26 +20,9 @@ jobs:
       run: yarn
     - name: Unit testing
       run: yarn lerna run test --stream
-
-  build:
-    name: Building
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checking out Repository
-      uses: actions/checkout@v2
-    - name: Setting up Node Environment
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.18.1
-    - name: Install dependencies
-      run: yarn install
-    - name: Build
-      run: yarn lerna run build --stream
-  
   deploy:
     name: Deploying App
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checking out repository
