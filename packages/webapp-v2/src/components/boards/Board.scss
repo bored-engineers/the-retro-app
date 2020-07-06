@@ -1,0 +1,28 @@
+.board{
+    flex-grow: 1;
+}
+.board-content{
+    margin-top: 1vh;
+}
+.category{
+    padding: 0 1vw;
+    margin-top: 1vh;
+}
+
+.category-title{
+    width: 100%;
+    // margin-top: 1vh;
+    display: inline-flex;
+    padding: 1vh 1vw;
+}
+.category-title-text{
+    margin-left: 0.5vw !important;
+    flex-grow: 1;
+}
+.add-button{
+    display: inline-flex;
+    button{
+        margin: 0;
+        padding: 0;
+    }
+}
