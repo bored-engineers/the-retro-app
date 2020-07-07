@@ -56,7 +56,6 @@ const LandingPage = () => {
                 browserHistory.push(`/boards/${boardId}?username=${username}`);
             })
             .catch(error => {
-                console.log(error);
                 setJoinBoardError({ errorField: 'boardId', message: error.message });
             })
             .finally(() => {

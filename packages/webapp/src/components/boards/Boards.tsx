@@ -45,6 +45,11 @@ const Boards = ({ location }: { location: Location }) => {
         'appreciations': []
     });
 
+    const updateNoteHandler = (note: NoteType) => {
+        console.log(`Updating a card to ${note.category} with ${note.text}`);
+        socket.emit('update-card', note);
+    };
+
     const createNoteHandler = (categoryId: string, text: string) => {
         console.log(`Adding a card to ${categoryId} with ${text}`);
 
@@ -54,10 +59,10 @@ const Boards = ({ location }: { location: Location }) => {
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
 
     const CATEGORIES_ICON_MAP = new Map<string, object>()
-        .set('went-well', <span className='category-title'><GoodMoodIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
-        .set('not-well', <span className='category-title'><BadMoodIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
-        .set('action-items', <span className='category-title'><ActionItemIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
-        .set('appreciations', <span className='category-title'><AppreciationIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
+        .set('went-well', <span id="wentWellColumn" className='category-title'><GoodMoodIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
+        .set('not-well', <span id="notWellColumn" className='category-title'><BadMoodIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
+        .set('action-items', <span id="actionItemsColumn" className='category-title'><ActionItemIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
+        .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
 
 
 
@@ -74,19 +79,27 @@ const Boards = ({ location }: { location: Location }) => {
             const { cards: notes } = data;
             if (!isEmpty(notes)) {
                 notes.forEach(note => {
-                    setBoardData(boardData => ({ ...boardData, [note.category]: [<Note text={note.text} />, ...(boardData as any)[note.category]] }));
+                    setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
                 });
             }
         });
 
     }, [SOCKET_URL, location]);
 
-
     useEffect(() => {
-        socket.on('add-card', (cardData: NoteType) => {
-            console.log('Adding a new card to Board...', cardData);
-            const card = { categoryId: cardData.category, data: <Note text={cardData.text} /> };
-            setBoardData(boardData => ({ ...boardData, [card.categoryId]: [card.data, ...(boardData as any)[card.categoryId]] }));
+        socket.on('add-card', (newNote: NoteType) => {
+            console.log('Adding a new card to Board...', newNote);
+            setBoardData((boardData: any) => {
+                const notesFromCategory = boardData[newNote.category];
+                const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === newNote.cardId));
+                if (existingNoteIndex === -1) {
+                    notesFromCategory.push(newNote);
+                    return { ...boardData, [newNote.category]: notesFromCategory }
+                } else {
+                    notesFromCategory[existingNoteIndex] = newNote;
+                    return { ...boardData, [newNote.category]: notesFromCategory }
+                }
+            });
         });
     }, []);
 
@@ -97,12 +110,14 @@ const Boards = ({ location }: { location: Location }) => {
             <BoardInfo boardId={boardId} />
             <div className="board-content">
                 <Grid container>
-                    {Object.keys(boardData).map(category => (
-                        <Grid item xs={12} sm={3}>
+                    {Object.keys(boardData).map((category, index) => (
+                        <Grid id={`categoryColumnGrid${index}`} item xs={12} sm={3}>
                             {CATEGORIES_ICON_MAP.get(category)}
                             <Divider variant="middle" />
-                            <Grid container direction="column" justify="space-evenly" alignItems="center" className="category">
-                                {(boardData as any)[category]}
+                            <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
+                                {(boardData as any)[category].map((note: NoteType, index:number) => (
+                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} />
+                                ))}
                             </Grid>
                         </Grid>
                     ))}

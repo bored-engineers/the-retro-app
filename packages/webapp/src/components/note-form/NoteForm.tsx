@@ -16,7 +16,7 @@ function getModalStyle() {
     };
 }
 
-const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any}) => {
+const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any }) => {
 
     const [modalStyle] = useState(getModalStyle);
     const [textAreaValue, setTextAreaValue] = useState('');
@@ -31,12 +31,18 @@ const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any})
         setNoteForm({ ...noteForm, open: false });
     }
 
+    const updateHandler = (event: any) => {
+        const text = textAreaValue;
+        noteForm.updateNoteHandler({ ...noteForm.data, text });
+        setNoteForm({ ...noteForm, open: false });
+    }
+
     const body = (
         <div style={modalStyle} className='note-body'>
             <h2 className="note-form-category">{noteForm.data.categoryTitle}</h2>
-            <TextareaAutosize onChange={textAreaChangeHandle} draggable='false' rows={5} rowsMax={10} className="note-form-textarea" />
+            <TextareaAutosize defaultValue={noteForm.data.text} onChange={textAreaChangeHandle} draggable='false' rows={5} rowsMax={10} className="note-form-textarea" />
             <Button className='close-button' color="secondary" onClick={handleClose}>Cancel</Button>
-            <Button className='add-button' color="primary" onClick={addHandler}>Add</Button>
+            <Button className='add-button' color="primary" onClick={noteForm.state !== 'update' ? addHandler : updateHandler}>{noteForm.state !== 'update' ? 'Add' : 'Update'}</Button>
         </div>
     );
 
