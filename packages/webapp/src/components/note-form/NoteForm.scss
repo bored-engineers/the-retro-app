@@ -1,0 +1,20 @@
+.note-body{
+    position: absolute;
+    width: 400px;
+    background-color: white;
+    padding: 8px 16px;
+
+    .note-form-textarea{
+        width: 100%;
+        height: 300px;
+        resize:none;
+    }
+
+    .add-button{
+        float: right;
+    } 
+
+    .close-button{
+        float: right;
+    }
+}

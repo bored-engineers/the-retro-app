@@ -20,7 +20,9 @@ type CardPayloadType = {
 socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: string, boardId: string }) {
   const cardService = new CardService();
   const { boardId, userId } = socket.handshake.query as QueryType;
+  console.log('Connection:', boardId, userId);
   if (Boolean(boardId) && Boolean(userId)) {
+    
     socket.userId = userId;
     socket.boardId = boardId;
 
@@ -28,7 +30,7 @@ socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: 
 
     socketServer.in(socket.boardId).emit(SocketEvent.USER_ADDED, { userId });
 
-    socket.emit(SocketEvent.WELCOME, { status: 'success', boardId, cards: await cardService.listCard(boardId) });
+    socket.emit(SocketEvent.WELCOME, { boardId, cards: await cardService.listCard(boardId) });
 
     socket.on(SocketEvent.CREATE_CARD, async (cardPayload: CardPayloadType) => {
       const addedCard = await cardService.addCard({ ...cardPayload, boardId });

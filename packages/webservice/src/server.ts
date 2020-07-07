@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
 import MongoDB from './db';
@@ -9,11 +10,7 @@ const server = express();
 
 MongoDB();
 
-server.use(function (_req: Request, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+server.use(cors());
 server.use(bodyParser.json());
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/api', mainRouter);

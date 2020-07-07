@@ -1,20 +1,14 @@
 import React from 'react';
-import './App.css';
-import LandingPage from './Components/Client/LandingPage';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
-import Board from './Components/Client/Board';
-import NotFound from './Components/Client/NotFound';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
-function App() {
-  return (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact children={<LandingPage />} />
-          <Route path="/board/:id" children={<Board />} />
-          <Route path="*" children={<NotFound />} />
-        </Switch>
-      </BrowserRouter>
-  );
-}
+import LandingPage from './components/landing-page/LandingPage';
+import Boards from './components/boards/Boards';
+
+const App = () => (
+    <Router>
+        <Route path='/' exact component={LandingPage} />
+        <Route path='/boards' component={Boards} />
+    </Router>
+);
 
 export default App;
