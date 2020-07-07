@@ -1,1 +1,1 @@
-branchName: 'TRA-${issue.number}'
+branchName: 'TRA-${issue.number}-${issue.title}'
