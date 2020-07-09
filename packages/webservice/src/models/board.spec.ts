@@ -30,6 +30,6 @@ describe('Board Model', () => {
     const createResult = await board.createBoard(boardId);
     const expectedResult = { ...sampleBoard };
     expect(createResult).toEqual(expectedResult);
-    expect(insertOneMock).toHaveBeenCalledWith({ boardId, createdAt: sampleDate, modifiedAt: sampleDate });
+    expect(insertOneMock).toHaveBeenCalledWith({ boardId, createdAt: sampleDate, modifiedAt: sampleDate, safetyScores: []  });
   });
 });

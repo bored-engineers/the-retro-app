@@ -15,6 +15,7 @@ import NoteForm from '../note-form/NoteForm';
 import Note from '../note/Note';
 import './Board.scss';
 import IconButton from '@material-ui/core/IconButton';
+import SafetyCheck from '../safety-check/SafetyCheck';
 
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
@@ -24,13 +25,13 @@ const isEmpty = (data: any) => Object.keys(data).length === 0;
 
 const Boards = ({ location }: { location: Location }) => {
     const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || '';
+
+    const [safetyScores, setSafetyScores] = useState<number[]>([]);
     const [boardId, setBoardId] = useState('');
     const [username, setUsername] = useState('');
-    const [noteForm, setNoteForm] = useState({
-        open: false,
-        data: {},
-        createNoteHandler: {}
-    });
+    const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
+
+    const [safetyCheck, setSafetyCheck] = useState({ open: false });
 
     const CATEGORIES_TITLE_MAP = new Map<string, string>()
         .set('went-well', 'What went well')
@@ -44,6 +45,11 @@ const Boards = ({ location }: { location: Location }) => {
         'action-items': [],
         'appreciations': []
     });
+
+    const safetyScoreSubmitHandle = (value: Number) => {
+        console.log(`Submitting safety score ${value}`);
+        socket.emit('submit-safety-score', value);
+    };
 
     const updateNoteHandler = (note: NoteType) => {
         console.log(`Updating a card to ${note.category} with ${note.text}`);
@@ -64,10 +70,10 @@ const Boards = ({ location }: { location: Location }) => {
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton color='primary' onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
 
     const CATEGORIES_ICON_MAP = new Map<string, object>()
-        .set('went-well', <span id="wentWellColumn" className='category-title'><GoodMoodIcon className='heading-well-icon'/><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
+        .set('went-well', <span id="wentWellColumn" className='category-title'><GoodMoodIcon className='heading-well-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
         .set('not-well', <span id="notWellColumn" className='category-title'><BadMoodIcon color='error' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
         .set('action-items', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
-        .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon className='heading-appreciation-icon'/><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
+        .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon className='heading-appreciation-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
 
 
 
@@ -108,11 +114,26 @@ const Boards = ({ location }: { location: Location }) => {
         });
     }, []);
 
+    useEffect(() => {
+        socket.on('update-safety-scores', (newSafetyScores: number[]) => {
+            console.log(`Updating safety scores with ${newSafetyScores}`);
+            setSafetyScores([...newSafetyScores]);
+        });
+    }, []);
+
+    useEffect(() => {
+        const SAFETY_CHECK_KEY = 'safty-check' + boardId + username;
+        const item = localStorage.getItem(SAFETY_CHECK_KEY);
+        if (!item) {
+            setSafetyCheck({ open: true });
+            localStorage.setItem(SAFETY_CHECK_KEY, 'done');
+        }
+    }, [boardId, username]);
 
     return (
         <div className="board">
             <Navbar username={username} />
-            <BoardInfo boardId={boardId} />
+            <BoardInfo boardId={boardId} safetyScores={safetyScores} />
             <div className="board-content">
                 <Grid container>
                     {Object.keys(boardData).map((category, index) => (
@@ -129,9 +150,9 @@ const Boards = ({ location }: { location: Location }) => {
                 </Grid>
             </div>
             <NoteForm noteForm={noteForm} setNoteForm={setNoteForm} />
+            <SafetyCheck safetyCheck={safetyCheck} setSafetyCheck={setSafetyCheck} safetyScoreSubmitHandle={safetyScoreSubmitHandle} />
         </div>
     );
 }
-
 
 export default Boards;
