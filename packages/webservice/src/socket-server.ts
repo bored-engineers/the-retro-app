@@ -12,8 +12,7 @@ enum SocketEvent {
   UPDATE_CARD = 'update-card',
   VOTE_CARD = 'vote-card',
   SUBMIT_SAFETY_SCORE = 'submit-safety-score',
-  UPDATE_SAFETY_SCORE = 'update-safety-scores',
-  REMOVE_CARD = 'remove-card'
+  UPDATE_SAFETY_SCORE = 'update-safety-scores'
 }
 
 type QueryType = {
@@ -67,11 +66,6 @@ socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: 
     socket.on(SocketEvent.SUBMIT_SAFETY_SCORE, async (newScore: number) => {
       const updatedScores = await boardService.updateSafetyScore(boardId, newScore);
       socketServer.in(socket.boardId).emit(SocketEvent.UPDATE_SAFETY_SCORE, updatedScores);
-    });
-    
-    socket.on(SocketEvent.REMOVE_CARD, async (cardId: string) => {
-      const deletedCard = await cardService.deleteCard(cardId);
-      socketServer.in(socket.boardId).emit(SocketEvent.REMOVE_CARD, deletedCard);
     });
   }
 });
