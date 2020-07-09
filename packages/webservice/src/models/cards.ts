@@ -45,8 +45,4 @@ export default class Cards {
     cardPayload.modifiedAt = new Date();
     return (await (await this.getCollection()).findOneAndUpdate({ cardId, boardId }, { $set: { ...cardPayload } }, { returnOriginal: false })).value;
   }
-
-  public async removeCard(cardId: string) {
-    return (await (await this.getCollection()).findOneAndDelete({cardId})).value;
-  }
 }
