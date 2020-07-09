@@ -44,15 +44,14 @@ const generatePDF = (data: any, boarID: any) => {
 
     doc.setFontSize(30);
     doc.setFontStyle('bold');
-    doc.text(75,15, 'The Retro App');
+    doc.text(73,15, 'The Retro App');
 
     var toDate = new Date().toString();
     var docName= `Retro-${toDate.substr(0,24).replace(':',"-")}`
     doc.setFontSize(12);
     doc.setFontStyle('normal');
-    doc.text(20, 31,`Date: ${toDate.substr(0, 15)}`);
-    doc.text(20, 37,`Board: ${boarID}`);
-    doc.text(20, 43,`Team : Joker`);
+    doc.text(20, 33,`Date: ${toDate.substr(0, 15)}`);
+    doc.text(20, 40,`Board: ${boarID}`);
 
     var blockHeight=8;
     doc.setFontStyle('normal');

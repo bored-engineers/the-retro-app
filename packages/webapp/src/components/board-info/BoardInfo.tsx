@@ -20,7 +20,6 @@ const BoardInfo = (props: { boardId: string }) => {
                     <Typography className='board-info-heading'>{`Board ID: ${props.boardId}`}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography>Lorem</Typography>
                    <span className='export-button'>Export Board<IconButton onClick={() => {
                       exportBoard(props.boardId)
                    }}><GetAppRoundedIcon className='export-icon'/></IconButton></span> 
