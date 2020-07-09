@@ -81,6 +81,7 @@ const Boards = ({ location }: { location: Location }) => {
         socket = io(SOCKET_URL, { query: { userId: username, boardId: boardId } });
 
         socket.on('welcome', (data: { boardId: string, cards: NoteType[] }) => {
+            setBoardData({'went-well': [],'not-well': [],'action-items': [],'appreciations': []});
             const { cards: notes } = data;
             if (!isEmpty(notes)) {
                 notes.forEach(note => {
