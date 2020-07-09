@@ -30,7 +30,11 @@ export default class CardsService {
   }
 
   async listCard(boardId: string) {
-    return await this.cardDao.listCards(boardId);
+    return this.cardDao.listCards(boardId);
+  }
+
+  async deleteCard(cardId: string) {
+    return this.cardDao.removeCard(cardId);
   }
 
   async updateCard(cardPayload: UpdateCardPayloadType) {
