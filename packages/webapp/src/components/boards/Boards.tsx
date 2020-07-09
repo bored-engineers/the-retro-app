@@ -56,6 +56,11 @@ const Boards = ({ location }: { location: Location }) => {
         socket.emit('update-card', note);
     };
 
+    const deleteNoteHandler = (note: NoteType) => {
+        console.log(`Removing a card from ${note.category} with ${note.text}`);
+        socket.emit('remove-card', note.cardId);
+    }
+
     const updateVoteHandler = (note: NoteType) => {
         console.log(`Updating vote to card having ${note.text}`);
         socket.emit('vote-card', note);
@@ -80,14 +85,14 @@ const Boards = ({ location }: { location: Location }) => {
     useEffect(() => {
         const { '?username': username } = queryString.parse(location.search);
 
-        const { boardId } = location.pathname.match(/(\/boards\/(?<boardId>[\w\d-]*))/)?.groups || { boardId: '' };
+        const { boardId } = location.pathname.match(/(\/boards\/(?<boardId>[\w\d-]*))/) ?.groups || { boardId: '' };
         setBoardId(boardId);
         setUsername(username as string);
 
         socket = io(SOCKET_URL, { query: { userId: username, boardId: boardId } });
 
         socket.on('welcome', (data: { boardId: string, cards: NoteType[] }) => {
-            setBoardData({'went-well': [],'not-well': [],'action-items': [],'appreciations': []});
+            setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] });
             const { cards: notes } = data;
             if (!isEmpty(notes)) {
                 notes.forEach(note => {
@@ -131,6 +136,20 @@ const Boards = ({ location }: { location: Location }) => {
         }
     }, [boardId, username]);
 
+    useEffect(() => {
+        socket.on('remove-card', (note: NoteType) => {
+            if (!note) {
+                return;
+            }
+            console.log('Deleting card from Board', note);
+            setBoardData((boardData: any) => {
+                const indexOfNote = boardData[note.category].indexOf(note);
+                boardData[note.category].splice(indexOfNote, 1);
+                return { ...boardData };
+            });
+        });
+    }, []);
+
     return (
         <div className="board">
             <Navbar username={username} />
@@ -142,8 +161,8 @@ const Boards = ({ location }: { location: Location }) => {
                             {CATEGORIES_ICON_MAP.get(category)}
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
-                                {(boardData as any)[category].map((note: NoteType, index:number) => (
-                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler}/>
+                                {(boardData as any)[category].map((note: NoteType, index: number) => (
+                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} deleteNoteHandler={deleteNoteHandler} updateVoteHandler={updateVoteHandler} />
                                 ))}
                             </Grid>
                         </Grid>
