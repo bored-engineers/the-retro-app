@@ -4,8 +4,13 @@ import { CardService } from './services';
 const socketServer: io.Server = io();
 
 enum SocketEvent {
-  CONNECT = 'connect', WELCOME = 'welcome', USER_ADDED = 'user-added', CREATE_CARD = 'create-card', ADD_CARD = 'add-card',
-  UPDATE_CARD = 'update-card'
+  CONNECT = 'connect',
+  WELCOME = 'welcome',
+  USER_ADDED = 'user-added', 
+  CREATE_CARD = 'create-card', 
+  ADD_CARD = 'add-card',
+  UPDATE_CARD = 'update-card',
+  VOTE_CARD = 'vote-card'
 }
 
 type QueryType = {
@@ -20,7 +25,7 @@ type CardPayloadType = {
 
 type UpdateCardPayloadType = CardPayloadType & {
   boardId: string;
-  votes: []
+  votes: string[]
   cardId: string;
   createdAt: Date;
   modifiedAt: Date;
@@ -47,6 +52,11 @@ socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: 
 
     socket.on(SocketEvent.UPDATE_CARD, async (cardPayload: UpdateCardPayloadType) => {
       const updatedCard = await cardService.updateCard({ ...cardPayload, boardId });
+      socketServer.in(socket.boardId).emit(SocketEvent.ADD_CARD, updatedCard);
+    });
+
+    socket.on(SocketEvent.VOTE_CARD, async (cardPayload: UpdateCardPayloadType) => {
+      const updatedCard = await cardService.updateVote(cardPayload, userId);
       socketServer.in(socket.boardId).emit(SocketEvent.ADD_CARD, updatedCard);
     });
   }
