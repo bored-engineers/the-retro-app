@@ -72,13 +72,13 @@ const BoardInfo = ({ boardId, safetyScores }: BoardInfoPropType) => {
 
                     <Typography className='safety-score-info'></Typography>
                     <Popper id={id} open={open} anchorEl={anchorEl}>
-                        <Paper><SafetyChart data={safetyScores} /></ Paper>
+                        <Paper variant='elevation' elevation={3} className='safety-graph'><SafetyChart data={safetyScores} /></ Paper>
                     </Popper>
                 </AccordionSummary>
                 <AccordionDetails>
-                   <span className='export-button'>Export Board<IconButton onClick={() => {
-                      exportBoard(boardId)
-                   }}><GetAppRoundedIcon className='export-icon'/></IconButton></span> 
+                    <span className='export-button'>Export Board<IconButton onClick={() => {
+                        exportBoard(boardId)
+                    }}><GetAppRoundedIcon className='export-icon' /></IconButton></span>
                 </AccordionDetails>
             </Accordion>
         </div>

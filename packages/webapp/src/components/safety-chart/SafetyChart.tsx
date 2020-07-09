@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis } from 'recharts';
+import { XAxis, YAxis, BarChart, CartesianGrid, Bar, Cell } from 'recharts';
 
 const CustomizedLabel = ({ x, y, stroke, value }: any) => {
     return (
@@ -24,12 +24,23 @@ const SafetyChart = ({ data }: { data: any }) => {
         graphData.push({ uv: Number.parseInt(key), pv: parsedData[key] });
     });
 
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
     return (
-        <LineChart width={500} height={300} data={graphData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
+        <BarChart width={400} height={300} data={graphData} barGap="0" barCategoryGap={0}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="category" dataKey="uv" />
-            <YAxis name="Users" />
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" label={<CustomizedLabel />} />
-        </LineChart>
+            <YAxis />
+            <Bar dataKey="pv" fill="#8884d8" label={<CustomizedLabel />}>
+                {
+                    graphData.map((entry: any, index: any) => {
+                        const color = COLORS[index]
+                        return <Cell fill={color} />;
+                    })
+                }
+            </Bar>
+        </BarChart>
     );
 }
 
