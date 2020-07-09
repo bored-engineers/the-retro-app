@@ -19,8 +19,8 @@ function getModalStyle() {
 const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any }) => {
 
     const [modalStyle] = useState(getModalStyle);
-    const [textAreaValue, setTextAreaValue] = useState('');
-    const handleClose = () => { setNoteForm({ ...noteForm, open: false }) };
+    const [textAreaValue, setTextAreaValue] = useState();
+    const handleClose = () => { setNoteForm({ ...noteForm, open: false }); setTextAreaValue(''); };
 
     const textAreaChangeHandle = (event: any) => setTextAreaValue(event.target.value);
 
@@ -28,12 +28,14 @@ const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any }
         const categoryId = noteForm.data.category;
         const text = textAreaValue;
         noteForm.createNoteHandler(categoryId, text);
+        setTextAreaValue('');
         setNoteForm({ ...noteForm, open: false });
     }
 
     const updateHandler = (event: any) => {
         const text = textAreaValue;
         noteForm.updateNoteHandler({ ...noteForm.data, text });
+        setTextAreaValue('');
         setNoteForm({ ...noteForm, open: false });
     }
 
