@@ -10,11 +10,13 @@ const createCategoryData = (category:string, data:any): any => {
     let cardData = {
         category: '',
         text: [''],
+        votes: 0,
     };
     for (let card of data){
         if(card.category===category){
             cardData.category=CATEGORIES_TITLE_MAP.get(card.category) ;
             cardData.text.push(card.text);
+            cardData.votes= card.votes.length;
         }
     }
     return cardData;
@@ -65,7 +67,7 @@ const generatePDF = (data: any, boarID: any) => {
             y=10;
         }
         doc.setFontSize(10)
-        splitTitle = doc.splitTextToSize(`- ${wentWell.text[i]}`, 180);
+        splitTitle = doc.splitTextToSize(`- ${wentWell.text[i]} [Votes ${wentWell.votes}]`, 180);
         lines = splitTitle.length;
         blockHeight = lines * lineHeight;
         blockHeight = blockHeight + 3;
@@ -92,7 +94,7 @@ const generatePDF = (data: any, boarID: any) => {
         }
 
         doc.setFontSize(10);
-        splitTitle = doc.splitTextToSize(`- ${notWell.text[i]}`, 180);
+        splitTitle = doc.splitTextToSize(`- ${notWell.text[i]} [Votes ${notWell.votes}]`, 180);
         lines = splitTitle.length;
         blockHeight = lines * lineHeight;
         blockHeight = blockHeight + 3;
@@ -117,7 +119,7 @@ const generatePDF = (data: any, boarID: any) => {
             y=10;
         }
         doc.setFontSize(10)
-        splitTitle = doc.splitTextToSize(`- ${actionItems.text[i]}`, 180);
+        splitTitle = doc.splitTextToSize(`- ${actionItems.text[i]} [Votes ${actionItems.votes}]`, 180);
         lines = splitTitle.length;
         blockHeight = lines * lineHeight;
         blockHeight = blockHeight + 3;
@@ -142,7 +144,7 @@ const generatePDF = (data: any, boarID: any) => {
             y=10;
         }
         doc.setFontSize(10)
-        splitTitle = doc.splitTextToSize(`- ${appreciation.text[i]}`, 180);
+        splitTitle = doc.splitTextToSize(`- ${appreciation.text[i]} [Votes ${appreciation.votes}]`, 180);
         lines = splitTitle.length;
         blockHeight = lines * lineHeight;
         blockHeight = blockHeight + 3;
