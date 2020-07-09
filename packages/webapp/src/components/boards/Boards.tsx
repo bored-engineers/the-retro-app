@@ -86,9 +86,10 @@ const Boards = ({ location }: { location: Location }) => {
 
         socket = io(SOCKET_URL, { query: { userId: username, boardId: boardId } });
 
-        socket.on('welcome', (data: { boardId: string, cards: NoteType[] }) => {
-            setBoardData({'went-well': [],'not-well': [],'action-items': [],'appreciations': []});
-            const { cards: notes } = data;
+        socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
+            const { cards: notes, safetyScores } = data;
+            
+            setSafetyScores([ ...safetyScores ]);
             if (!isEmpty(notes)) {
                 notes.forEach(note => {
                     setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
@@ -142,8 +143,8 @@ const Boards = ({ location }: { location: Location }) => {
                             {CATEGORIES_ICON_MAP.get(category)}
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
-                                {(boardData as any)[category].map((note: NoteType, index:number) => (
-                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler}/>
+                                {(boardData as any)[category].map((note: NoteType, index: number) => (
+                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} />
                                 ))}
                             </Grid>
                         </Grid>

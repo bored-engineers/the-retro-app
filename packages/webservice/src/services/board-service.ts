@@ -19,4 +19,8 @@ export default class BoardService {
   async updateSafetyScore(boardId: string, newScore: number) {
     return await this.boardDao.updateSafetyScore(boardId, newScore);
   }
+
+  async getSafetyScores(boardId: string) {
+    return await this.boardDao.getSafetyScores(boardId);
+  }
 }

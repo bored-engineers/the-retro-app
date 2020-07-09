@@ -33,4 +33,10 @@ export default class Board {
     const updatedBoard = (await (await this.getCollection()).findOneAndUpdate({ boardId }, { $set: { ...existingBoard } }, { returnOriginal: false })).value;
     return updatedBoard.safetyScores;
   }
+
+  public async getSafetyScores(boardId: string): Promise<number[]> {
+    const boardData = (await (await this.getCollection()).findOne({ boardId }));
+    if (boardData) return boardData.safetyScores;
+    else return [];
+  }
 }

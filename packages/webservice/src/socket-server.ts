@@ -46,7 +46,7 @@ socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: 
 
     socketServer.in(socket.boardId).emit(SocketEvent.USER_ADDED, { userId });
 
-    socket.emit(SocketEvent.WELCOME, { boardId, cards: await cardService.listCard(boardId) });
+    socket.emit(SocketEvent.WELCOME, { boardId, cards: await cardService.listCard(boardId), safetyScores: await boardService.getSafetyScores(boardId) });
 
     socket.on(SocketEvent.CREATE_CARD, async (cardPayload: CardPayloadType) => {
       const addedCard = await cardService.addCard({ ...cardPayload, boardId });
