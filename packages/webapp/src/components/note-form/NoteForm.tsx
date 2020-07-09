@@ -42,7 +42,7 @@ const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any }
             <h2 className="note-form-category">{noteForm.data.categoryTitle}</h2>
             <TextareaAutosize defaultValue={noteForm.data.text} onChange={textAreaChangeHandle} draggable='false' rows={5} rowsMax={10} className="note-form-textarea" />
             <Button className='close-button' color="secondary" onClick={handleClose}>Cancel</Button>
-            <Button className='add-button' color="primary" onClick={noteForm.state !== 'update' ? addHandler : updateHandler}>{noteForm.state !== 'update' ? 'Add' : 'Update'}</Button>
+            <Button className='add-button' color="primary" disabled={!Boolean(textAreaValue)} onClick={noteForm.state !== 'update' ? addHandler : updateHandler}>{noteForm.state !== 'update' ? 'Add' : 'Update'}</Button>
         </div>
     );
 

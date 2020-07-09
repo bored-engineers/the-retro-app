@@ -50,6 +50,11 @@ const Boards = ({ location }: { location: Location }) => {
         socket.emit('update-card', note);
     };
 
+    const updateVoteHandler = (note: NoteType) => {
+        console.log(`Updating vote to card having ${note.text}`);
+        socket.emit('vote-card', note);
+    };
+
     const createNoteHandler = (categoryId: string, text: string) => {
         console.log(`Adding a card to ${categoryId} with ${text}`);
 
@@ -116,7 +121,7 @@ const Boards = ({ location }: { location: Location }) => {
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
                                 {(boardData as any)[category].map((note: NoteType, index:number) => (
-                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} />
+                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler}/>
                                 ))}
                             </Grid>
                         </Grid>
