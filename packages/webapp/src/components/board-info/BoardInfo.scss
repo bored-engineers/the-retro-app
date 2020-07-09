@@ -3,15 +3,28 @@
     border-radius: 0 !important;
 }
 
-.board-info-heading{
-    font-size: 1rem;
-    font-weight: 400;
-
+.board-info{
+    flex-grow: 1;
 }
+
+.board-info-heading{
+    display: inline;
+}
+
 .export-button{
     text-align: right !important;
     flex-grow: 1;
 }
+
 .export-icon{
     color: rgb(52, 231, 97)
+}
+
+.popper{
+    border: 1px solid;
+    padding: 1vh;
+    background-color: white;
+}
+.safety-result-info{
+    margin-left: 0.5vw;
 }

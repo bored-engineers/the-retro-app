@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Button from '@material-ui/core/Button';
 
 import './NoteForm.scss'
-import Button from '@material-ui/core/Button';
 
 function getModalStyle() {
     const top = 50;

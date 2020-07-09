@@ -1,0 +1,11 @@
+.modal-body{
+    position: absolute;
+    width: 400px;
+    background-color: white;
+    padding: 1.5vh 2vw;
+
+    .submit-button{
+        display: block;
+        float: right;
+    }
+}

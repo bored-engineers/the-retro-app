@@ -13,6 +13,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
+    "@types/recharts": "^1.8.14",
     "@types/socket.io-client": "^1.4.33",
     "axios": "^0.19.2",
     "jspdf": "^1.5.3",
@@ -21,6 +22,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "recharts": "^1.8.5",
     "socket.io-client": "^2.3.0",
     "typescript": "~3.7.2"
   },
