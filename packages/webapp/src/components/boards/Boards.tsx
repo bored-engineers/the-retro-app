@@ -88,8 +88,9 @@ const Boards = ({ location }: { location: Location }) => {
 
         socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
             const { cards: notes, safetyScores } = data;
-            
-            setSafetyScores([ ...safetyScores ]);
+            console.log('welcome event');
+            setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] })
+            setSafetyScores([...safetyScores]);
             if (!isEmpty(notes)) {
                 notes.forEach(note => {
                     setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
