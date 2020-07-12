@@ -44,7 +44,7 @@ const BoardInfo = ({ boardId, safetyScores }: BoardInfoPropType) => {
     }
 
     useEffect(() => {
-        setIsSafe(safetyScores.every(score => score > 3));
+        setIsSafe(safetyScores.every(score => score > 2));
     }, [safetyScores]);
 
     return (
@@ -68,7 +68,7 @@ const BoardInfo = ({ boardId, safetyScores }: BoardInfoPropType) => {
                             </Tooltip>
                         </span>
                     </Tooltip>
-                    <Button variant="outlined" color={isSafe ? 'primary' : 'secondary'} onClick={onSafetyResultClickHandler}> Safty Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
+                    <Button variant="outlined" color={isSafe ? 'primary' : 'secondary'} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
 
                     <Typography className='safety-score-info'></Typography>
                     <Popper id={id} open={open} anchorEl={anchorEl}>
