@@ -1,9 +1,9 @@
-import Cards from './cards';
+import Card from './card';
 import MongoDB from '../db';
 
 jest.mock('../db');
 describe('Cards Model', () => {
-  const cards = new Cards();
+  const cards = new Card();
   let insertOneMock;
   let findOneMock;
   let findMock;
