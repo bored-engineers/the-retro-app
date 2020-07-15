@@ -6,7 +6,7 @@ on:
       environment:
         default: staging
         required: true
-        description: Which environmnet to deploy on?
+        description: Which environment to deploy on?
 
 jobs:
   Deploy:
