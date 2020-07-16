@@ -43,7 +43,7 @@ jobs:
         username: _json_key
         password: ${{ secrets.CLOUD_SA_KEY }}
         registry: gcr.io
-        repository: the-retro-board/the-retro-app-webservice
+        repository: the-retro-board/${{ env.SERVICE_NAME}}
         tags: latest
         dockerfile: ./packages/webservice/Dockerfile
         path: ./packages/webservice/.
