@@ -37,5 +37,4 @@ jobs:
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --file "./packages/webservice/Dockerfile" \
-          packages/webservice/.
+          ./packages/webservice/Dockerfile
