@@ -30,11 +30,13 @@ jobs:
 
     - name: Build
       run: yarn lerna run build --stream --scope=@the-retro-app/webservice
+    
+    - name: Preparing webservice directory 
+      run: cp yarn.lock packages/webservice
 
     - name: Publish
       run: |-
-        cp yarn.lock packages/webservice && \
         gcloud builds submit \
           --quiet \
-          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
           ./packages/webservice/Dockerfile
