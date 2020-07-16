@@ -40,6 +40,6 @@ jobs:
         username: _json_key
         password: ${{ secrets.CLOUD_SA_KEY }}
         registry: gcr.io
-        repository: ${{PROJECT_ID}}/${{SERVICE_NAME}}
+        repository: ${{ env.PROJECT_ID }}/${{env.SERVICE_NAME}}
         tags: ${{GITHUB_SHA}}
         dockerfile: ./packages/webservice/Dockerfile
