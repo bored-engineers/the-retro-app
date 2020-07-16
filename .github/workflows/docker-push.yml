@@ -33,6 +33,9 @@ jobs:
     
     - name: Preparing webservice directory 
       run: cp yarn.lock packages/webservice
+
+    - name: Testing
+      run: echo $PROJECT_ID , $SERVICE_NAME , $GITHUB_SHA
     
     - name: Build and push Docker images
       uses: docker/build-push-action@v1
