@@ -43,3 +43,4 @@ jobs:
         repository: ${{ env.PROJECT_ID }}/${{env.SERVICE_NAME}}
         tags: ${{env.GITHUB_SHA}}
         dockerfile: ./packages/webservice/Dockerfile
+        path: ./packages/webservice/.
