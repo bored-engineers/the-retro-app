@@ -33,10 +33,13 @@ jobs:
     
     - name: Preparing webservice directory 
       run: cp yarn.lock packages/webservice
-
-    - name: Publish
-      run: |-
-        gcloud builds submit \
-          --quiet \
-          --tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
-          ./packages/webservice/Dockerfile
+    
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1
+      with:
+        username: _json_key
+        password: ${{ secrets.CLOUD_SA_KEY }}
+        registry: gcr.io
+        repository: $PROJECT_ID/$SERVICE_NAME
+        tags: $GITHUB_SHA
+        dockerfile: ./packages/webservice/Dockerfile
