@@ -29,7 +29,7 @@ jobs:
       run: yarn install
 
     - name: Build
-      run: yarn lerna run build --stream
+      run: yarn lerna run build --stream --scope=@the-retro-app/webservice
 
     - name: Publish
       run: |-
@@ -37,5 +37,5 @@ jobs:
         gcloud builds submit \
           --quiet \
           --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --file=./packages/webservice/Dockerfile \
+          --file "./packages/webservice/Dockerfile" \
           packages/webservice/.
