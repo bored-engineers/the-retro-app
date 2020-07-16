@@ -1,0 +1,41 @@
+name: Docker Publish 
+
+on:
+  push:
+    branches:
+    - TRA-62-Add_Docker_Support
+
+env:
+  PROJECT_ID: ${{ secrets.CLOUD_PROJECT }}
+  SERVICE_NAME: the-retro-app-webservice
+
+jobs:
+  setup-build:
+    name: Setup, Build, and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '286.0.0'
+        service_account_email: ${{ secrets.CLOUD_SA_EMAIL }}
+        service_account_key: ${{ secrets.CLOUD_SA_KEY }}
+        project_id: ${{ secrets.CLOUD_PROJECT }}
+    
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build
+      run: yarn lerna run build --stream
+
+    - name: Publish
+      run: |-
+        cp yarn.lock packages/webservice && \
+        gcloud builds submit \
+          --quiet \
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --file=./packages/webservice/Dockerfile \
+          packages/webservice/.
