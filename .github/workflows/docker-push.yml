@@ -27,9 +27,15 @@ jobs:
     
     - name: Install dependencies
       run: yarn install
+    
+    - name: Build Webapp
+      run: yarn lerna run build --stream --scope=@the-retro-app/webapp
 
     - name: Build
       run: yarn lerna run build --stream --scope=@the-retro-app/webservice
+
+    - name: Copying webapp to webservice
+      run: cp -r packages/webapp/build packages/webservice/dist/public
     
     - name: Preparing webservice directory 
       run: cp yarn.lock packages/webservice
