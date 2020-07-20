@@ -3,7 +3,7 @@ name: Docker Publish
 on:
   push:
     branches:
-    - TRA-62-Add_Docker_Support
+    - master
 
 env:
   PROJECT_ID: ${{ secrets.CLOUD_PROJECT }}
