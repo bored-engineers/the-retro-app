@@ -1,5 +1,5 @@
 {
-  "name": "the-retro-app",
+  "name": "@the-retro-app/webapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

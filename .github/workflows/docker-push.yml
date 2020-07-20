@@ -1,0 +1,52 @@
+name: Docker Publish 
+
+on:
+  push:
+    branches:
+    - master
+
+env:
+  PROJECT_ID: ${{ secrets.CLOUD_PROJECT }}
+  SERVICE_NAME: the-retro-app-webservice
+
+jobs:
+  setup-build:
+    name: Setup, Build, and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '286.0.0'
+        service_account_email: ${{ secrets.CLOUD_SA_EMAIL }}
+        service_account_key: ${{ secrets.CLOUD_SA_KEY }}
+        project_id: ${{ secrets.CLOUD_PROJECT }}
+    
+    - name: Install dependencies
+      run: yarn install
+    
+    - name: Build Webapp
+      run: yarn lerna run build --stream --scope=@the-retro-app/webapp
+
+    - name: Build
+      run: yarn lerna run build --stream --scope=@the-retro-app/webservice
+
+    - name: Copying webapp to webservice
+      run: cp -r packages/webapp/build packages/webservice/dist/public
+    
+    - name: Preparing webservice directory 
+      run: cp yarn.lock packages/webservice
+    
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1
+      with:
+        username: _json_key
+        password: ${{ secrets.CLOUD_SA_KEY }}
+        registry: gcr.io
+        repository: ${{env.PROJECT_ID}}/${{ env.SERVICE_NAME}}
+        tags: latest
+        dockerfile: ./packages/webservice/Dockerfile
+        path: ./packages/webservice/.
