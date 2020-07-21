@@ -1,13 +1,13 @@
 import { v4 as uuid } from 'uuid';
 import Card from '../models/card';
 
-type CardPayloadType = {
+type CardCreatePayloadType = {
   boardId: string;
   text: string;
   category: string;
 };
 
-type UpdateCardPayloadType = CardPayloadType & {
+type CardType = CardCreatePayloadType & {
   _id?: string;
   votes: string[];
   cardId: string;
@@ -15,14 +15,14 @@ type UpdateCardPayloadType = CardPayloadType & {
   modifiedAt: Date;
 }
 
-export default class CardsService {
+export default class CardService {
   card: Card;
 
   constructor() {
     this.card = new Card();
   }
 
-  async addCard(cardPayload: CardPayloadType) {
+  async addCard(cardPayload: CardCreatePayloadType) {
     const cardId = uuid();
     const addCardResult = await this.card.createCard({ ...cardPayload, cardId, votes: [] });
     delete addCardResult._id;
@@ -37,14 +37,14 @@ export default class CardsService {
     return this.card.removeCard(cardId);
   }
 
-  async updateCard(cardPayload: UpdateCardPayloadType) {
+  async updateCard(cardPayload: CardType) {
     if (cardPayload._id) delete cardPayload._id;
-    const updateCardResult = await this.card.updateCard({ ...cardPayload });
+    const updateCardResult = await this.card.updateCard(cardPayload);
     delete updateCardResult._id;
     return updateCardResult;
   }
 
-  async updateVote(cardPayload: UpdateCardPayloadType, userId: string) {
+  async updateVote(cardPayload: CardType, userId: string) {
     if (cardPayload._id) delete cardPayload._id;
     const updateCardResult = await this.card.updateCard({...cardPayload, votes: this.addOrRemoveVote(cardPayload.votes, userId)});
     delete updateCardResult._id;

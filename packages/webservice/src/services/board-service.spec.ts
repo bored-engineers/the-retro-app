@@ -30,9 +30,9 @@ describe('Board Service', () => {
       updateSafetyScore: updateSafetyScoreMock,
       getSafetyScores: getSafetyScoresMock
     };
-    Board.mockImplementation(() => boardMock);
+    (Board as jest.Mock).mockImplementation(() => boardMock);
     boardService = new BoardService();
-    expect(Board).toBeCalled();
+    expect(Board).toHaveBeenCalled();
   });
 
   afterEach(() => {
@@ -43,14 +43,13 @@ describe('Board Service', () => {
     const sampleUuid = 'sample uuid';
 
     beforeEach(() => {
-      uuid.mockReturnValue(sampleUuid);
+      (uuid as jest.Mock).mockReturnValue(sampleUuid);
       boardMock.createBoard.mockResolvedValue(sampleBoard);
     });
 
     it('should create board', async () => {
       const result = await boardService.createBoard();
 
-      console.log(createBoardMock.getMockImplementation().toString());
       expect(createBoardMock).toHaveBeenCalledWith(sampleUuid);
       expect(result).toEqual(sampleBoard);
     });
