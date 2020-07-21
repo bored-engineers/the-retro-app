@@ -1,13 +1,13 @@
 import { v4 as uuid } from 'uuid';
-import Cards from '../models/cards';
+import Card from '../models/card';
 
-type CardPayloadType = {
+type CardCreatePayloadType = {
   boardId: string;
   text: string;
   category: string;
 };
 
-type UpdateCardPayloadType = CardPayloadType & {
+type CardType = CardCreatePayloadType & {
   _id?: string;
   votes: string[];
   cardId: string;
@@ -15,34 +15,38 @@ type UpdateCardPayloadType = CardPayloadType & {
   modifiedAt: Date;
 }
 
-export default class CardsService {
-  cardDao: Cards;
+export default class CardService {
+  card: Card;
 
   constructor() {
-    this.cardDao = new Cards();
+    this.card = new Card();
   }
 
-  async addCard(cardPayload: CardPayloadType) {
+  async addCard(cardPayload: CardCreatePayloadType) {
     const cardId = uuid();
-    const addCardResult = await this.cardDao.createCard({ ...cardPayload, cardId, votes: [] });
+    const addCardResult = await this.card.createCard({ ...cardPayload, cardId, votes: [] });
     delete addCardResult._id;
     return addCardResult;
   }
 
   async listCard(boardId: string) {
-    return await this.cardDao.listCards(boardId);
+    return this.card.listCards(boardId);
   }
 
-  async updateCard(cardPayload: UpdateCardPayloadType) {
+  async deleteCard(cardId: string) {
+    return this.card.removeCard(cardId);
+  }
+
+  async updateCard(cardPayload: CardType) {
     if (cardPayload._id) delete cardPayload._id;
-    const updateCardResult = await this.cardDao.updateCard({ ...cardPayload });
+    const updateCardResult = await this.card.updateCard(cardPayload);
     delete updateCardResult._id;
     return updateCardResult;
   }
 
-  async updateVote(cardPayload: UpdateCardPayloadType, userId: string) {
+  async updateVote(cardPayload: CardType, userId: string) {
     if (cardPayload._id) delete cardPayload._id;
-    const updateCardResult = await this.cardDao.updateCard({...cardPayload, votes: this.addOrRemoveVote(cardPayload.votes, userId)});
+    const updateCardResult = await this.card.updateCard({...cardPayload, votes: this.addOrRemoveVote(cardPayload.votes, userId)});
     delete updateCardResult._id;
     return updateCardResult;
   }

@@ -20,7 +20,7 @@ type CardTypeWithId = CardType & {
   _id: string;
 }
 
-export default class Cards {
+export default class Card {
   private async getCollection(): Promise<Collection> {
     return (await MongoDB() as Db).collection(CARD_COLLECTION_NAME);
   }
@@ -44,5 +44,9 @@ export default class Cards {
     const { cardId, boardId } = cardPayload;
     cardPayload.modifiedAt = new Date();
     return (await (await this.getCollection()).findOneAndUpdate({ cardId, boardId }, { $set: { ...cardPayload } }, { returnOriginal: false })).value;
+  }
+  
+  public async removeCard(cardId: string) {
+    return (await (await this.getCollection()).findOneAndDelete({cardId})).value;
   }
 }
