@@ -9,18 +9,18 @@ export default class BoardService {
 
   async createBoard() {
     const boardId = uuid();
-    return await this.board.createBoard(boardId);
+    return this.board.createBoard(boardId);
   }
 
   async getBoard(boardId: string) {
-    return await this.board.getBoard(boardId);
+    return this.board.getBoard(boardId);
   }
 
   async updateSafetyScore(boardId: string, newScore: number) {
-    return await this.board.updateSafetyScore(boardId, newScore);
+    return this.board.updateSafetyScore(boardId, newScore);
   }
 
   async getSafetyScores(boardId: string) {
-    return await this.board.getSafetyScores(boardId);
+    return this.board.getSafetyScores(boardId);
   }
 }
