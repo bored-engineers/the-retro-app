@@ -40,13 +40,17 @@ const Boards = ({ location }: { location: Location }) => {
         .set('appreciations', 'Appreciations');
 
     const [boardData, setBoardData] = useState({
-        'went-well': [],
-        'not-well': [],
-        'action-items': [],
-        'appreciations': []
+        'went-well': [] as any[],
+        'not-well': [] as any[],
+        'action-items': [] as any [],
+        'appreciations': [] as any[]
     });
 
-    const safetyScoreSubmitHandle = (value: Number) => {
+    const deleteHandler = (cardId: string) => {
+        socket.emit('remove-card', cardId);
+    };
+
+    const safetyScoreSubmitHandler = (value: Number) => {
         socket.emit('submit-safety-score', value);
     };
 
@@ -115,6 +119,19 @@ const Boards = ({ location }: { location: Location }) => {
     }, []);
 
     useEffect(() => {
+        socket.on('remove-card', (deletedNote: NoteType) => {
+            setBoardData((boardData: any) => {
+                const notesFromCategory = boardData[deletedNote.category];
+                const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === deletedNote.cardId));
+                if(existingNoteIndex !== -1) {
+                    notesFromCategory.splice(existingNoteIndex, 1);
+                }
+                return {...boardData, [deletedNote.category]: notesFromCategory};
+            });
+        });
+    });
+
+    useEffect(() => {
         const SAFETY_CHECK_KEY = 'safty-check' + boardId + username;
         const item = localStorage.getItem(SAFETY_CHECK_KEY);
         if (!item) {
@@ -135,7 +152,7 @@ const Boards = ({ location }: { location: Location }) => {
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
                                 {(boardData as any)[category].map((note: NoteType, index: number) => (
-                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} />
+                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler}/>
                                 ))}
                             </Grid>
                         </Grid>
@@ -143,7 +160,7 @@ const Boards = ({ location }: { location: Location }) => {
                 </Grid>
             </div>
             <NoteForm noteForm={noteForm} setNoteForm={setNoteForm} />
-            <SafetyCheck safetyCheck={safetyCheck} setSafetyCheck={setSafetyCheck} safetyScoreSubmitHandle={safetyScoreSubmitHandle} />
+            <SafetyCheck safetyCheck={safetyCheck} setSafetyCheck={setSafetyCheck} safetyScoreSubmitHandle={safetyScoreSubmitHandler} />
         </div>
     );
 }

@@ -71,6 +71,7 @@ socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: 
     
     socket.on(SocketEvent.REMOVE_CARD, async (cardId: string) => {
       const deletedCard = await cardService.deleteCard(cardId);
+      if(deletedCard === null ) return;
       socketServer.in(socket.boardId).emit(SocketEvent.REMOVE_CARD, deletedCard);
     });
   }

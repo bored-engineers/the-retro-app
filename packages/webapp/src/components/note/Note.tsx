@@ -7,10 +7,13 @@ import { Button, IconButton, Badge } from "@material-ui/core";
 
 import './Note.scss';
 
-const Note = ({ note, setNoteForm, updateNoteHandler, updateVoteHandler }: any) => {
-
+const Note = ({ note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteHandler }: any) => {
   const editNoteHandler = () => {
     setNoteForm({ open: true, updateNoteHandler: updateNoteHandler, data: note, state: 'update' });
+  }
+
+  const deleteClickHandler = () => {
+    deleteHandler(note.cardId);
   }
 
   const voteHandler = () => {
@@ -31,6 +34,7 @@ const Note = ({ note, setNoteForm, updateNoteHandler, updateVoteHandler }: any) 
           </IconButton>
           </Badge>
         <Button color='primary' className='edit-button' onClick={editNoteHandler}>Edit</Button>
+        <Button color='primary' className='edit-button' onClick={deleteClickHandler}>DELETE</Button>
       </Card>
     </div>
   )
