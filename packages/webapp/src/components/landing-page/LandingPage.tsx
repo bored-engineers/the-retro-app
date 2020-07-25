@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router'
 
-import { createBoard, getBoard } from '../../services/board.service';
+import { createBoard, joinBoard } from '../../services/board.service';
 import './LandingPage.scss';
 import boardImage from '../../board.svg';
 
@@ -21,7 +21,6 @@ const LandingPage = () => {
     const browserHistory = useHistory();
 
     const [boardId, setBoardId] = useState('');
-    const [username, setUsername] = useState('');
     const [createBoardProgress, setCreateBoardProgress] = useState(false);
     const [createBoardSuccess, setCreateBoardSuccess] = useState(false);
     const [createBoardError, setCreateBoardError] = useState(false);
@@ -47,13 +46,13 @@ const LandingPage = () => {
 
     const joinBoardHandler = () => {
         if (!boardId) return setJoinBoardError({ errorField: 'boardId', message: 'Board id is required' });
-        if (!username) return setJoinBoardError({ errorField: 'username', message: 'Username is required' });
 
         setJoinBoardProgress(true);
         setJoinBoardError({ errorField: '', message: '' });
-        getBoard(boardId)
-            .then(boardId => {
-                browserHistory.push(`/boards/${boardId}?username=${username}`);
+        joinBoard(boardId)
+            .then(boardJoiningResult => {
+                const {boardId, userId} = boardJoiningResult;
+                browserHistory.push(`/boards/${boardId}?username=${userId}`);
             })
             .catch(error => {
                 setJoinBoardError({ errorField: 'boardId', message: error.message });
@@ -90,10 +89,6 @@ const LandingPage = () => {
                         <FormControl fullWidth>
                             <InputLabel htmlFor="boardId" variant="standard" margin="dense">Board ID</InputLabel>
                             <Input id="boardId" fullWidth value={boardId} onChange={event => setBoardId(event.target.value)} disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'boardId'} />
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <InputLabel htmlFor="username" variant="standard" margin="dense" >Your Name</InputLabel>
-                            <Input id="username" onChange={event => setUsername(event.target.value)} fullWidth disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'username'} />
                         </FormControl>
                         <Button variant="contained" color="primary" onClick={joinBoardHandler} disabled={createBoardProgress || joinBoardProgress} >Join Now</Button>
                         {joinBoardProgress && <LinearProgress />}

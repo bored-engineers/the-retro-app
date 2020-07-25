@@ -19,17 +19,21 @@ describe('Board Model', () => {
 
   it('should read a board', async () => {
     const boardId = 'sample-board-id';
-    const readResult = await board.getBoard(boardId);
     const expectedResult = { ...sampleBoard };
+
+    const readResult = await board.getBoard(boardId);
+
     expect(readResult).toEqual(expectedResult);
     expect(findOneMock).toHaveBeenCalledWith({ boardId });
   });
 
   it('should create a new board', async () => {
     const boardId = 'sample-board-id';
-    const createResult = await board.createBoard(boardId);
     const expectedResult = { ...sampleBoard };
+
+    const createResult = await board.createBoard(boardId);
+
     expect(createResult).toEqual(expectedResult);
-    expect(insertOneMock).toHaveBeenCalledWith({ boardId, createdAt: sampleDate, modifiedAt: sampleDate, safetyScores: []  });
+    expect(insertOneMock).toHaveBeenCalledWith({ boardId, createdAt: sampleDate, modifiedAt: sampleDate, safetyScores: [], users: [] });
   });
 });
