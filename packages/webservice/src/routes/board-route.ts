@@ -1,7 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { BoardService } from '../services';
-import { CardService } from '../services';
-
+import { BoardService, CardService } from '../services';
 
 const boardRouter = Router();
 const boardService = new BoardService();
