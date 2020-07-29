@@ -10,7 +10,8 @@ describe('Board Service', () => {
     boardId: 'some board id',
     safetyScores: [2, 3, 1, 4],
     createdAt: Date.now(),
-    modifiedAt: Date.now()
+    modifiedAt: Date.now(),
+    users: []
   };
   let boardMock;
   let boardService;
@@ -18,8 +19,10 @@ describe('Board Service', () => {
   let createBoardMock;
   let getBoardMock;
   let updateSafetyScoreMock;
+  let joinBoardMock;
 
   beforeAll(() => {
+    joinBoardMock = jest.fn();
     getSafetyScoresMock = jest.fn();
     createBoardMock = jest.fn();
     getBoardMock = jest.fn();
@@ -28,7 +31,8 @@ describe('Board Service', () => {
       createBoard: createBoardMock,
       getBoard: getBoardMock,
       updateSafetyScore: updateSafetyScoreMock,
-      getSafetyScores: getSafetyScoresMock
+      getSafetyScores: getSafetyScoresMock,
+      joinBoard: joinBoardMock
     };
     (Board as jest.Mock).mockImplementation(() => boardMock);
     boardService = new BoardService();
@@ -98,6 +102,23 @@ describe('Board Service', () => {
 
       expect(result).toEqual(sampleBoard);
       expect(getSafetyScoresMock).toHaveBeenCalledWith(boardId);
+    });
+  });
+
+  describe('join Board', () => {
+    const boardResult = {boardId: 'new board Id', userId: 'new user Id'};
+
+    beforeEach(() => {
+      joinBoardMock.mockResolvedValue(boardResult);
+    });
+
+    it('should join a new user to the board', async () => {
+      const boardId = 'sample board id';
+
+      const result = await boardService.joinBoard(boardId);
+
+      expect(result).toEqual(boardResult);
+      expect(joinBoardMock).toHaveBeenCalledWith(boardId);
     });
   });
 });

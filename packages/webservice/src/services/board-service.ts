@@ -23,4 +23,8 @@ export default class BoardService {
   async getSafetyScores(boardId: string) {
     return this.board.getSafetyScores(boardId);
   }
+
+  async joinBoard(boardId: string) {
+    return this.board.joinBoard(boardId);
+  }
 }

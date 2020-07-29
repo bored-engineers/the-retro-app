@@ -21,6 +21,14 @@ boardRouter.post('/', async (_req: Request, res: Response, next: NextFunction) =
   }
 });
 
+boardRouter.post('/join/:boardId', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.send(await boardService.joinBoard(_req.params.boardId));
+  } catch (e) {
+    next(e);
+  }
+});
+
 boardRouter.get('/:boardId/export', async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.send(await cardService.listCard(req.params.boardId));

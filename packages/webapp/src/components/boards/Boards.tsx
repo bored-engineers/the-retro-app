@@ -47,23 +47,18 @@ const Boards = ({ location }: { location: Location }) => {
     });
 
     const safetyScoreSubmitHandle = (value: Number) => {
-        console.log(`Submitting safety score ${value}`);
         socket.emit('submit-safety-score', value);
     };
 
     const updateNoteHandler = (note: NoteType) => {
-        console.log(`Updating a card to ${note.category} with ${note.text}`);
         socket.emit('update-card', note);
     };
 
     const updateVoteHandler = (note: NoteType) => {
-        console.log(`Updating vote to card having ${note.text}`);
         socket.emit('vote-card', note);
     };
 
     const createNoteHandler = (categoryId: string, text: string) => {
-        console.log(`Adding a card to ${categoryId} with ${text}`);
-
         socket.emit('create-card', { category: categoryId, text: text });
     };
 
@@ -74,8 +69,6 @@ const Boards = ({ location }: { location: Location }) => {
         .set('not-well', <span id="notWellColumn" className='category-title'><BadMoodIcon color='error' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
         .set('action-items', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
         .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon className='heading-appreciation-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
-
-
 
     useEffect(() => {
         const { '?username': username } = queryString.parse(location.search);
@@ -88,7 +81,6 @@ const Boards = ({ location }: { location: Location }) => {
 
         socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
             const { cards: notes, safetyScores } = data;
-            console.log('welcome event');
             setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] })
             setSafetyScores([...safetyScores]);
             if (!isEmpty(notes)) {
@@ -102,7 +94,6 @@ const Boards = ({ location }: { location: Location }) => {
 
     useEffect(() => {
         socket.on('add-card', (newNote: NoteType) => {
-            console.log('Adding a new card to Board...', newNote);
             setBoardData((boardData: any) => {
                 const notesFromCategory = boardData[newNote.category];
                 const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === newNote.cardId));
@@ -119,7 +110,6 @@ const Boards = ({ location }: { location: Location }) => {
 
     useEffect(() => {
         socket.on('update-safety-scores', (newSafetyScores: number[]) => {
-            console.log(`Updating safety scores with ${newSafetyScores}`);
             setSafetyScores([...newSafetyScores]);
         });
     }, []);
@@ -135,7 +125,7 @@ const Boards = ({ location }: { location: Location }) => {
 
     return (
         <div className="board">
-            <Navbar username={username} />
+            <Navbar/>
             <BoardInfo boardId={boardId} safetyScores={safetyScores} />
             <div className="board-content">
                 <Grid container>
