@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
 import BadMoodIcon from '@material-ui/icons/MoodBad';
@@ -64,6 +64,18 @@ const Boards = ({ location }: { location: Location }) => {
 
     const createNoteHandler = (categoryId: string, text: string) => {
         socket.emit('create-card', { category: categoryId, text: text });
+    };
+
+    const sortCardHandler = () => {
+        const currentBoardData = boardData;
+        const sortedBoard = Object.keys(currentBoardData).reduce((sortedBoarData, category: string) => {
+            const sortedCardsWithinCategory = (currentBoardData as any)[category].sort((card1: any, card2: any) => {
+                return card2.votes.length - card1.votes.length;
+            });
+            return {...sortedBoarData, [category]: sortedCardsWithinCategory};
+        }, {});
+
+        setBoardData(sortedBoard as any);
     };
 
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton color='primary' onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
@@ -144,6 +156,7 @@ const Boards = ({ location }: { location: Location }) => {
         <div className="board">
             <Navbar/>
             <BoardInfo boardId={boardId} safetyScores={safetyScores} />
+            <Button onClick={sortCardHandler}>SORT</Button>
             <div className="board-content">
                 <Grid container>
                     {Object.keys(boardData).map((category, index) => (

@@ -2,7 +2,7 @@ import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { Button, IconButton, Badge } from "@material-ui/core";
 
 import './Note.scss';
@@ -30,7 +30,7 @@ const Note = ({ note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteH
         </CardContent>
         <Badge badgeContent={note.votes.length} color='primary'>
           <IconButton onClick={voteHandler}>
-            <ThumbUpIcon />
+            <AddCircleOutlineIcon/>
           </IconButton>
           </Badge>
         <Button color='primary' className='edit-button' onClick={editNoteHandler}>Edit</Button>
