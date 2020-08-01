@@ -1,0 +1,24 @@
+name: Deploy Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        default: staging
+        required: true
+        description: Which branch to deploy?
+jobs:
+  deploy:
+    name: Deploying App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out repository
+        uses: actions/checkout@v2
+      - name: Deploying
+        uses: akhileshns/heroku-deploy@v3.0.5
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{ github.event.inputs.branch_name }}
+          branch: "${{ github.event.inputs.branch_name }}-the-retro-app"
+          heroku_email: "ajit.drag@gmail.com"
+          buildpack: "heroku/nodejs"

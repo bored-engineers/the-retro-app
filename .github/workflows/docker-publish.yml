@@ -1,9 +1,9 @@
-name: Docker Publish 
+name: Docker Publish
 
 on:
   push:
-    branches:
-    - master
+    tags: 
+      - v*
 
 env:
   PROJECT_ID: ${{ secrets.CLOUD_PROJECT }}
@@ -13,10 +13,14 @@ jobs:
   setup-build:
     name: Setup, Build, and Publish
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Setting up Node Environment
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.18.1
 
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -27,6 +31,9 @@ jobs:
     
     - name: Install dependencies
       run: yarn install
+    
+    - name: Unit testing
+      run: yarn lerna run test --stream
     
     - name: Build Webapp
       run: yarn lerna run build --stream --scope=@the-retro-app/webapp
@@ -48,5 +55,6 @@ jobs:
         registry: gcr.io
         repository: ${{env.PROJECT_ID}}/${{ env.SERVICE_NAME}}
         tags: latest
+        tag_with_ref: true
         dockerfile: ./packages/webservice/Dockerfile
         path: ./packages/webservice/.
