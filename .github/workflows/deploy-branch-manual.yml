@@ -19,10 +19,9 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.0.5
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "${{ github.event.inputs.branch_name }}-the-retro-app"
-          branch: "${{ github.event.inputs.branch_name }}"
+          heroku_app_name: ${{ github.event.inputs.branch_name }}-the-retro-app
+          branch: ${{ github.event.inputs.branch_name }}
           heroku_email: "ajit.drag@gmail.com"
           buildpack: "heroku/nodejs"
-      
-      - name: Deloyment URL
-        run: echo "${{ github.event.inputs.branch_name }}-the-retro-app.herokuapp.com"
+        env:
+          DB_URL: mongodb://${{ secrets.BRANCH_MONGO_USPW }}@${{ secrets.BRANCH_MONGO_URL }}/${{ github.event.inputs.branch_name }}-the-retro-app
