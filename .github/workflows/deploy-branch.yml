@@ -14,11 +14,12 @@ jobs:
     steps:
       - name: Checking out repository
         uses: actions/checkout@v2
+
       - name: Deploying
         uses: akhileshns/heroku-deploy@v3.0.5
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{ github.event.inputs.branch_name }}
-          branch: "${{ github.event.inputs.branch_name }}-the-retro-app"
+          heroku_app_name: "${{ github.event.inputs.branch_name }}-the-retro-app"
+          branch: "${{ github.event.inputs.branch_name }}"
           heroku_email: "ajit.drag@gmail.com"
           buildpack: "heroku/nodejs"
