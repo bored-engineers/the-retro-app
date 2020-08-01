@@ -14,14 +14,21 @@ jobs:
     steps:
       - name: Checking out repository
         uses: actions/checkout@v2
+      
+      - name: Creating url Prefix from branch
+        id: vars
+        run: echo "::set-output name=url_prefix::$(git symbolic-ref --short -q HEAD | cut -c1-15)"
 
       - name: Deploying
         uses: akhileshns/heroku-deploy@v3.0.5
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{ github.event.inputs.branch_name }}-the-retro-app
+          heroku_app_name: ${{ steps.vars.outputs.url_prefix }}-the-retro-app
           branch: ${{ github.event.inputs.branch_name }}
           heroku_email: "ajit.drag@gmail.com"
           buildpack: "heroku/nodejs"
         env:
-          DB_URL: mongodb://${{ secrets.BRANCH_MONGO_USPW }}@${{ secrets.BRANCH_MONGO_URL }}/${{ github.event.inputs.branch_name }}-the-retro-app
+          DB_URL: mongodb://${{ secrets.BRANCH_MONGO_USPW }}@${{ secrets.BRANCH_MONGO_URL }}/${{ steps.vars.outputs.url_prefix }}-the-retro-app
+          
+      - name: Deployed App URL
+        run: echo "${{ steps.vars.outputs.url_prefix }}-the-retro-app"
