@@ -5,6 +5,9 @@
 <img alt="Retro App" width="250" height="250" src="https://github.com/bored-engineers/the-retro-app/blob/master/docs/Logo.png"> </a>
 </div>
 
+## Who are we:
+Just bunch of bored engineers.
+
 ## Tools
 
 We use these awesome tools.
