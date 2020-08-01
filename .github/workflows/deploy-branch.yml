@@ -23,3 +23,6 @@ jobs:
           branch: "${{ github.event.inputs.branch_name }}"
           heroku_email: "ajit.drag@gmail.com"
           buildpack: "heroku/nodejs"
+      
+      - name: Deloyment URL
+        run: echo "${{ github.event.inputs.branch_name }}-the-retro-app.herokuapp.com"
