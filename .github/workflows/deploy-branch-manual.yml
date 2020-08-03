@@ -19,7 +19,7 @@ jobs:
       
       - name: Creating url Prefix from branch
         id: vars
-        run: echo "::set-output name=url_prefix::$(git symbolic-ref --short -q HEAD | cut -c1-15)"
+        run: echo "::set-output name=url_prefix::$(git symbolic-ref --short -q HEAD | cut -c1-15 | tr '[:upper:]' '[:lower:]')"
 
       - name: Deploying
         uses: akhileshns/heroku-deploy@v3.4.6
@@ -33,4 +33,4 @@ jobs:
           HD_DB_URL: mongodb+srv://${{ secrets.BRANCH_MONGO_USPW }}@${{ secrets.BRANCH_MONGO_URL }}/${{ steps.vars.outputs.url_prefix }}-the-retro-app?retryWrites=true&w=majority
           
       - name: Deployed App URL
-        run: echo "${{ steps.vars.outputs.url_prefix }}-the-retro-app.herokuapp.com"
+        run: echo "https://${{ steps.vars.outputs.url_prefix }}-the-retro-app.herokuapp.com"
