@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid, Typography, Button, Box, ButtonGroup } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
 import BadMoodIcon from '@material-ui/icons/MoodBad';
@@ -156,7 +156,11 @@ const Boards = ({ location }: { location: Location }) => {
         <div className="board">
             <Navbar/>
             <BoardInfo boardId={boardId} safetyScores={safetyScores} />
-            <Button onClick={sortCardHandler}>SORT</Button>
+            <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box" flexDirection="row-reverse">
+                <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
+                     <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
+                 </ButtonGroup>
+            </Box> 
             <div className="board-content">
                 <Grid container>
                     {Object.keys(boardData).map((category, index) => (

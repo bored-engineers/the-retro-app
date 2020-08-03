@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 
 import SafetyChart from '../safety-chart/SafetyChart';
 import './BoardInfo.scss'
+import { ButtonGroup } from '@material-ui/core';
 
 type BoardInfoPropType = {
     boardId: string;
@@ -64,11 +65,13 @@ const BoardInfo = ({ boardId, safetyScores }: BoardInfoPropType) => {
                     >
                         <span className="board-info">
                             <Tooltip title="Click to copy Board Id" aria-label="copy" placement="top-start">
-                                <Typography onClick={onClickBoardInfoHeading} className='board-info-heading'>{`Board ID: ${boardId}`}</Typography>
+                            <ButtonGroup color="primary" variant="outlined" size="small" aria-label="small outlined button group">
+                             <Button onClick={onClickBoardInfoHeading}>{`Board ID: ${boardId}`}</Button>
+                             </ButtonGroup>
                             </Tooltip>
                         </span>
                     </Tooltip>
-                    <Button variant="outlined" color={isSafe ? 'primary' : 'secondary'} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
+                    <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
 
                     <Typography className='safety-score-info'></Typography>
                     <Popper id={id} open={open} anchorEl={anchorEl}>

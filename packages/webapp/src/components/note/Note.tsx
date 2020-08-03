@@ -3,7 +3,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import { Button, IconButton, Badge } from "@material-ui/core";
+import { Button, IconButton, Badge, Box, Tooltip } from "@material-ui/core";
 
 import './Note.scss';
 
@@ -22,20 +22,24 @@ const Note = ({ note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteH
 
   return (
     <div className="note">
-      <Card variant="outlined">
+    <Box boxShadow={5} className="card-box">
+      <Card variant="outlined" >
         <CardContent>
           <Typography variant="body2" component="p" className='note-content-text'>
             {note.text}
           </Typography>
         </CardContent>
         <Badge badgeContent={note.votes.length} color='primary'>
-          <IconButton onClick={voteHandler}>
+        <Tooltip title="Click to Vote">
+          <IconButton onClick={voteHandler} className='vote-button'>
             <AddCircleOutlineIcon/>
           </IconButton>
+          </Tooltip>
           </Badge>
         <Button color='primary' className='edit-button' onClick={editNoteHandler}>Edit</Button>
         <Button color='primary' className='edit-button' onClick={deleteClickHandler}>DELETE</Button>
       </Card>
+      </Box>
     </div>
   )
 };
