@@ -17,4 +17,9 @@
 }
 .navbar-logo{
     background-color:#3f51b5 !important;
+    margin: 1vh 0.5vw;
+
+    & :hover{
+        cursor: pointer;
+    }
 }
