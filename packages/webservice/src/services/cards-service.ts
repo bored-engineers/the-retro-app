@@ -46,7 +46,7 @@ export default class CardService {
 
   async updateVote(cardPayload: CardType, userId: string) {
     if (cardPayload._id) delete cardPayload._id;
-    const updateCardResult = await this.card.updateCard({...cardPayload, votes: this.addOrRemoveVote(cardPayload.votes, userId)});
+    const updateCardResult = await this.card.updateCard({ ...cardPayload, votes: this.addOrRemoveVote(cardPayload.votes, userId) });
     delete updateCardResult._id;
     return updateCardResult;
   }
@@ -55,8 +55,7 @@ export default class CardService {
     const votesSet = new Set(votes);
     if (votesSet.has(userId)) {
       votesSet.delete(userId);
-    }
-    else {
+    } else {
       votesSet.add(userId);
     }
     return Array.from(votesSet);
