@@ -14,7 +14,7 @@ import { useHistory } from 'react-router'
 
 import { createBoard, joinBoard } from '../../services/board.service';
 import './LandingPage.scss';
-import boardImage from '../../board.svg';
+import boardImage from '../../assets/board.svg';
 
 
 const LandingPage = () => {
