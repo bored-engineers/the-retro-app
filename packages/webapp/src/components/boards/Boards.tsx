@@ -169,7 +169,7 @@ const Boards = ({ location }: { location: Location }) => {
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
                                 {(boardData as any)[category].map((note: NoteType, index: number) => (
-                                    <Note id={`note${index}`} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler}/>
+                                    <Note id={`note${index}`} username={username} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler}/>
                                 ))}
                             </Grid>
                         </Grid>
