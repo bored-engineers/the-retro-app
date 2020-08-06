@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { BoardService, CardService } from '../services';
+import { BoardJoinError } from '../errors/board-errors';
 
 const boardRouter = Router();
 const boardService = new BoardService();
@@ -21,9 +22,13 @@ boardRouter.post('/', async (_req: Request, res: Response, next: NextFunction) =
   }
 });
 
-boardRouter.post('/join/:boardId', async (_req: Request, res: Response, next: NextFunction) => {
+boardRouter.post('/join/:boardId', async (req: Request, res: Response, next: NextFunction) => {
+  const boardId = req.params.boardId;
+  const userId = req.query.userid as string;
+
   try {
-    res.send(await boardService.joinBoard(_req.params.boardId));
+    if (!boardId || !userId) throw new BoardJoinError(boardId, userId);
+    res.send(await boardService.joinBoard(boardId, userId));
   } catch (e) {
     next(e);
   }

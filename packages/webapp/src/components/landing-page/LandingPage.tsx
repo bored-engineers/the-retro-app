@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -44,14 +45,24 @@ const LandingPage = () => {
             });
     };
 
+    const getUserIdForBoard = (boardId: string) => {
+        const USER_ID_KEY = `userIdforboard ${boardId}`;
+        let userId = localStorage.getItem(USER_ID_KEY);
+        if (!userId) {
+            userId = uuid();
+            localStorage.setItem(USER_ID_KEY, userId);
+        }
+        return userId;
+    }
+
     const joinBoardHandler = () => {
         if (!boardId) return setJoinBoardError({ errorField: 'boardId', message: 'Board id is required' });
 
         setJoinBoardProgress(true);
         setJoinBoardError({ errorField: '', message: '' });
-        joinBoard(boardId)
+        joinBoard(boardId, getUserIdForBoard(boardId))
             .then(boardJoiningResult => {
-                const {boardId, userId} = boardJoiningResult;
+                const { boardId, userId } = boardJoiningResult;
                 browserHistory.push(`/boards/${boardId}?username=${userId}`);
             })
             .catch(error => {
@@ -101,4 +112,3 @@ const LandingPage = () => {
 }
 
 export default LandingPage;
-    

@@ -1,14 +1,11 @@
 import Board from './board';
 import MongoDB from '../db';
-import { v4 as uuid } from 'uuid';
 import { BoardNotFoundError } from '../errors/board-errors';
 
 jest.mock('../db');
-jest.mock('uuid');
 
 describe('Board Model', () => {
   const board = new Board();
-  const sampleUUID = 'sample-uuid';
   let insertOneMock;
   let findOneMock;
   let findOneAndUpdateMock;
@@ -20,8 +17,8 @@ describe('Board Model', () => {
     jest.spyOn(global, 'Date').mockImplementation(() => sampleDate as unknown as string);
     insertOneMock = jest.fn().mockResolvedValue({ ops: [sampleBoard] });
     findOneMock = jest.fn().mockResolvedValue(sampleBoard);
-    findOneAndUpdateMock = jest.fn().mockResolvedValue({value: sampleBoard});
-    (uuid as jest.Mock).mockReturnValue(sampleUUID);
+    findOneAndUpdateMock = jest.fn().mockResolvedValue({ value: sampleBoard });
+
     (MongoDB as jest.Mock).mockImplementation(() => ({ collection: () => ({ findOneAndUpdate: findOneAndUpdateMock, insertOne: insertOneMock, findOne: findOneMock }) }));
   });
 
@@ -36,26 +33,26 @@ describe('Board Model', () => {
   });
 
   describe('join board', () => {
-    it('should join a board', async () => {
-      const boardId = 'smaple-board-id';
+    const boardId = 'dummy-boardid';
+    const userId = 'dummy-userId';
 
-      const result = await board.joinBoard(boardId);
+    it('should join a board', async () => {
+      const result = await board.joinBoard(boardId, userId);
 
       expect(result.boardId).toEqual(boardId);
-      expect(result.userId).toEqual(sampleUUID);
-      expect(findOneAndUpdateMock).toHaveBeenCalledWith({ boardId }, { $push: { users: sampleUUID } }, { returnOriginal: false });
+      expect(result.userId).toEqual(userId);
+      expect(findOneAndUpdateMock).toHaveBeenCalledWith({ boardId }, { $push: { users: userId } }, { returnOriginal: false });
     });
 
     it('should throw error when board does not exist', async () => {
-      findOneAndUpdateMock.mockResolvedValue({value: null});
-      const boardId = 'smaple-board-id';
+      findOneAndUpdateMock.mockResolvedValue({ value: null });
 
-      const errorPromise = board.joinBoard(boardId);
+      const errorPromise = board.joinBoard(boardId, userId);
 
       await expect(errorPromise).rejects.toThrow(BoardNotFoundError);
       const error = await errorPromise.catch(err => err);
       expect(error.message).toEqual(`Board not found for id:${boardId}`);
-      expect(findOneAndUpdateMock).toHaveBeenCalledWith({ boardId }, { $push: { users: sampleUUID } }, { returnOriginal: false });
+      expect(findOneAndUpdateMock).toHaveBeenCalledWith({ boardId }, { $push: { users: userId } }, { returnOriginal: false });
     });
   });
 
