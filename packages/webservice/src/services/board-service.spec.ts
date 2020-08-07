@@ -106,19 +106,20 @@ describe('Board Service', () => {
   });
 
   describe('join Board', () => {
-    const boardResult = {boardId: 'new board Id', userId: 'new user Id'};
+    const boardId = 'dummy-boardId';
+    const userId = 'dummy-userID';
+
+    const boardResult = { boardId: boardId, userId: userId };
 
     beforeEach(() => {
       joinBoardMock.mockResolvedValue(boardResult);
     });
 
     it('should join a new user to the board', async () => {
-      const boardId = 'sample board id';
-
-      const result = await boardService.joinBoard(boardId);
+      const result = await boardService.joinBoard(boardId, userId);
 
       expect(result).toEqual(boardResult);
-      expect(joinBoardMock).toHaveBeenCalledWith(boardId);
+      expect(joinBoardMock).toHaveBeenCalledWith(boardId, userId);
     });
   });
 });

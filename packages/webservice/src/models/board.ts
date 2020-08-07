@@ -1,7 +1,6 @@
 import MongoDB from '../db';
 import { Collection, Db } from 'mongodb';
 import { BoardNotFoundError } from '../errors/board-errors';
-import { v4 as uuid } from 'uuid';
 
 type BoardType = {
   boardId: string;
@@ -23,8 +22,7 @@ export default class Board {
     return await (await (await this.getCollection()).insertOne(createPayload)).ops[0];
   }
 
-  public async joinBoard(boardId: string): Promise<{boardId: string, userId: string}> {
-    const userId = uuid();
+  public async joinBoard(boardId: string, userId: string): Promise<{ boardId: string, userId: string }> {
     const board = (await (await this.getCollection()).findOneAndUpdate({ boardId }, { $push: { users: userId } }, { returnOriginal: false })).value;
     if (!board) throw new BoardNotFoundError(boardId);
     return { boardId, userId };

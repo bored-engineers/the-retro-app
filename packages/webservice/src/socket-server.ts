@@ -68,10 +68,10 @@ socketServer.on(SocketEvent.CONNECT, async function (socket: Socket & { userId: 
       const updatedScores = await boardService.updateSafetyScore(boardId, newScore);
       socketServer.in(socket.boardId).emit(SocketEvent.UPDATE_SAFETY_SCORE, updatedScores);
     });
-    
+
     socket.on(SocketEvent.REMOVE_CARD, async (cardId: string) => {
       const deletedCard = await cardService.deleteCard(cardId);
-      if(deletedCard === null ) return;
+      if (deletedCard === null) return;
       socketServer.in(socket.boardId).emit(SocketEvent.REMOVE_CARD, deletedCard);
     });
   }

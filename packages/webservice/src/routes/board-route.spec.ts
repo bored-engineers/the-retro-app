@@ -59,29 +59,29 @@ describe('Board Route', () => {
 //   let cardServiceMock;
 //   let boardServiceMock;
 
-//   beforeAll(() => {
-//     routerMock = (Router as jest.Mock).mock.results[0];
-//     postMock = routerMock.post;
-//     getMock = routerMock.get;
-//     cardServiceMock = (CardService as jest.Mock).mock.results[0];
-//     boardServiceMock = (BoardService as jest.Mock).mock.results[1];
-//     listCardMock = cardServiceMock.listCard;
-//     createBoardMock = boardServiceMock.createBoard;
-//     getBoardMock = boardServiceMock.getBoard;
-//     expect(BoardService).toHaveBeenCalled();
-//     expect(CardService).toHaveBeenCalled();
-//     expect(Router).toHaveBeenCalled();
-//   });
+  //   beforeAll(() => {
+  //     routerMock = (Router as jest.Mock).mock.results[0];
+  //     postMock = routerMock.post;
+  //     getMock = routerMock.get;
+  //     cardServiceMock = (CardService as jest.Mock).mock.results[0];
+  //     boardServiceMock = (BoardService as jest.Mock).mock.results[1];
+  //     listCardMock = cardServiceMock.listCard;
+  //     createBoardMock = boardServiceMock.createBoard;
+  //     getBoardMock = boardServiceMock.getBoard;
+  //     expect(BoardService).toHaveBeenCalled();
+  //     expect(CardService).toHaveBeenCalled();
+  //     expect(Router).toHaveBeenCalled();
+  //   });
 
-//   beforeEach(() => {
-//     listCardMock.mockReturnValue(listOfCards);
-//     getBoardMock.mockReturnValue(sampleBoard);
-//     createBoardMock.mockReturnValue(sampleBoard);
-//   });
+  //   beforeEach(() => {
+  //     listCardMock.mockReturnValue(listOfCards);
+  //     getBoardMock.mockReturnValue(sampleBoard);
+  //     createBoardMock.mockReturnValue(sampleBoard);
+  //   });
 
-//   afterEach(() => {
-//     jest.resetAllMocks();
-//   });
+  //   afterEach(() => {
+  //     jest.resetAllMocks();
+  //   });
 
   it('should register respective rotues', () => {
     expect(true).toBe(true);

@@ -14,7 +14,7 @@ describe('Card Service', () => {
     votes: [],
     cardId,
     createdAt: Date.now(),
-    modifiedAt: Date.now(),
+    modifiedAt: Date.now()
   };
   const sampleCardFromMongo = {
     ...sampleCard,
@@ -66,7 +66,7 @@ describe('Card Service', () => {
 
     expect(result).toEqual(sampleCard);
     expect(uuid).toHaveBeenCalled();
-    expect(createCardMock).toHaveBeenCalledWith({...createPayload, votes: [], cardId});
+    expect(createCardMock).toHaveBeenCalledWith({ ...createPayload, votes: [], cardId });
   });
 
   it('should remove card', async () => {
@@ -86,20 +86,20 @@ describe('Card Service', () => {
   });
 
   it('should update cards', async () => {
-    const updatePayload = {...sampleCard, text: 'some new text'};
-    updateCardMock.mockReturnValue({...sampleCardFromMongo, text: 'some new text'});
+    const updatePayload = { ...sampleCard, text: 'some new text' };
+    updateCardMock.mockReturnValue({ ...sampleCardFromMongo, text: 'some new text' });
 
     const result = await cardService.updateCard(updatePayload);
 
-    expect(result).toEqual({...sampleCard, text: 'some new text'});
+    expect(result).toEqual({ ...sampleCard, text: 'some new text' });
     expect(updateCardMock).toHaveBeenCalledWith(updatePayload);
   });
 
   describe('update vote', () => {
     it('should add vote for user if not already voted', async () => {
       const userId = 'some user id';
-      updateCardMock.mockReturnValue({...sampleCardFromMongo, votes: [userId]});
-      const updatedPayload = {...sampleCard, votes: [userId]};
+      updateCardMock.mockReturnValue({ ...sampleCardFromMongo, votes: [userId] });
+      const updatedPayload = { ...sampleCard, votes: [userId] };
 
       const result = await cardService.updateVote(sampleCard, userId);
 
@@ -110,7 +110,7 @@ describe('Card Service', () => {
     it('should add vote for user if not already voted', async () => {
       const userId = 'some user id';
       updateCardMock.mockReturnValue(sampleCardFromMongo);
-      const updatePayload = {...sampleCard, votes: [userId]};
+      const updatePayload = { ...sampleCard, votes: [userId] };
 
       const result = await cardService.updateVote(updatePayload, userId);
 

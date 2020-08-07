@@ -80,12 +80,12 @@ describe('Cards Model', () => {
   it('should update card', async () => {
     const cardId = 'sample-card-id';
     const boardId = 'dummy-board-id';
-    const updateCardPayload = { ...dummyCard, text: 'new text'};
-    findOneAndUpdateMock.mockResolvedValue({value: updateCardPayload});
+    const updateCardPayload = { ...dummyCard, text: 'new text' };
+    findOneAndUpdateMock.mockResolvedValue({ value: updateCardPayload });
 
     const updatedCard = await cards.updateCard(updateCardPayload);
 
-    expect(updatedCard).toEqual({...updateCardPayload, modifiedAt: sampleDate});
+    expect(updatedCard).toEqual({ ...updateCardPayload, modifiedAt: sampleDate });
     expect(dateSpy).toHaveBeenCalled();
     expect(findOneAndUpdateMock).toHaveBeenCalledWith({ cardId, boardId }, { $set: { ...updateCardPayload } }, { returnOriginal: false });
   });

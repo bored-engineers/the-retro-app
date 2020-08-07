@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { BoardNotFoundError } from './board-errors';
+import { BoardNotFoundError, BoardJoinError } from './board-errors';
 
 class ErrorResponse {
   status: number;
@@ -10,11 +10,18 @@ class ErrorResponse {
   }
 }
 
-const errorHandlingMap = new Map()
-  .set(BoardNotFoundError.name, new ErrorResponse(404, 'Requested board not found'));
+const getErrorResponse = (error) => {
+  switch (error.name) {
+    case BoardNotFoundError.name: return new ErrorResponse(404, error.message || 'Requested board not found');
+    case BoardJoinError.name: return new ErrorResponse(400, error.message || 'Requested board can not be joined');
+    default: return new ErrorResponse(500, 'Something weird happen, try after sometime');
+  }
+};
 
 export default (error: Error, _req: Request, res: Response, _next: NextFunction) => {
-  const errorResponse: ErrorResponse = errorHandlingMap.get(error.name);
+  console.log(error);
+
+  const errorResponse: ErrorResponse = getErrorResponse(error);
 
   res.status(errorResponse.status).send({ message: errorResponse.message, code: errorResponse.status });
 };
