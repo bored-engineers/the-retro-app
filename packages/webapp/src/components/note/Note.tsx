@@ -8,7 +8,7 @@ import { Button, IconButton, Badge, Tooltip, Box } from "@material-ui/core";
 
 import './Note.scss';
 
-const Note = ({ username, note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteHandler }: any) => {
+const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteHandler }: any) => {
   const editNoteHandler = () => {
     setNoteForm({ open: true, updateNoteHandler: updateNoteHandler, data: note, state: 'update' });
   }
@@ -21,7 +21,7 @@ const Note = ({ username, note, setNoteForm, updateNoteHandler, updateVoteHandle
     updateVoteHandler(note);
   }
 
-  const hasVoted = () => note.votes.includes(username)
+  const hasVoted = () => note.votes.includes(userId)
 
   return (
     <div className="note">
