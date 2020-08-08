@@ -6,16 +6,16 @@ import BadMoodIcon from '@material-ui/icons/MoodBad';
 import ActionItemIcon from '@material-ui/icons/PlaylistAddCheck';
 import AppreciationIcon from '@material-ui/icons/Stars';
 import AddIcon from '@material-ui/icons/AddCircle';
-import queryString from 'querystring';
 import io from 'socket.io-client'
-
 import Navbar from '../navbar/Navbar';
 import BoardInfo from '../board-info/BoardInfo';
 import NoteForm from '../note-form/NoteForm';
 import Note from '../note/Note';
-import './Board.scss';
 import IconButton from '@material-ui/core/IconButton';
 import SafetyCheck from '../safety-check/SafetyCheck';
+import { getUserIDStorageKey } from '../../common-utils';
+
+import './Board.scss';
 
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
@@ -28,7 +28,7 @@ const Boards = ({ location }: { location: Location }) => {
 
     const [safetyScores, setSafetyScores] = useState<number[]>([]);
     const [boardId, setBoardId] = useState('');
-    const [username, setUsername] = useState('');
+    const [userId, setUserId] = useState('');
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
 
     const [safetyCheck, setSafetyCheck] = useState({ open: false });
@@ -42,7 +42,7 @@ const Boards = ({ location }: { location: Location }) => {
     const [boardData, setBoardData] = useState({
         'went-well': [] as any[],
         'not-well': [] as any[],
-        'action-items': [] as any [],
+        'action-items': [] as any[],
         'appreciations': [] as any[]
     });
 
@@ -72,7 +72,7 @@ const Boards = ({ location }: { location: Location }) => {
             const sortedCardsWithinCategory = (currentBoardData as any)[category].sort((card1: any, card2: any) => {
                 return card2.votes.length - card1.votes.length;
             });
-            return {...sortedBoarData, [category]: sortedCardsWithinCategory};
+            return { ...sortedBoarData, [category]: sortedCardsWithinCategory };
         }, {});
 
         setBoardData(sortedBoard as any);
@@ -86,14 +86,21 @@ const Boards = ({ location }: { location: Location }) => {
         .set('action-items', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
         .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon className='heading-appreciation-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
 
+    const getUserIdForBoard = (boardId: string) => {
+        let userId = localStorage.getItem(getUserIDStorageKey(boardId));
+        if (Boolean(userId)) return userId;
+        else throw new Error('Invalid user id');
+    }
+
     useEffect(() => {
-        const { '?username': username } = queryString.parse(location.search);
-
         const { boardId } = location.pathname.match(/(\/boards\/(?<boardId>[\w\d-]*))/)?.groups || { boardId: '' };
-        setBoardId(boardId);
-        setUsername(username as string);
+        if (!boardId) throw new Error('Invalid board id');
+        const userId = getUserIdForBoard(boardId);
 
-        socket = io(SOCKET_URL, { query: { userId: username, boardId: boardId } });
+        setBoardId(boardId);
+        setUserId(userId as string);
+
+        socket = io(SOCKET_URL, { query: { userId: userId, boardId: boardId } });
 
         socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
             const { cards: notes, safetyScores } = data;
@@ -135,32 +142,32 @@ const Boards = ({ location }: { location: Location }) => {
             setBoardData((boardData: any) => {
                 const notesFromCategory = boardData[deletedNote.category];
                 const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === deletedNote.cardId));
-                if(existingNoteIndex !== -1) {
+                if (existingNoteIndex !== -1) {
                     notesFromCategory.splice(existingNoteIndex, 1);
                 }
-                return {...boardData, [deletedNote.category]: notesFromCategory};
+                return { ...boardData, [deletedNote.category]: notesFromCategory };
             });
         });
     });
 
     useEffect(() => {
-        const SAFETY_CHECK_KEY = 'safty-check' + boardId + username;
+        const SAFETY_CHECK_KEY = 'safty-check' + boardId + userId;
         const item = localStorage.getItem(SAFETY_CHECK_KEY);
         if (!item) {
             setSafetyCheck({ open: true });
             localStorage.setItem(SAFETY_CHECK_KEY, 'done');
         }
-    }, [boardId, username]);
+    }, [boardId, userId]);
 
     return (
         <div className="board">
-            <Navbar/>
+            <Navbar />
             <BoardInfo boardId={boardId} safetyScores={safetyScores} />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box" flexDirection="row-reverse">
                 <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
-                     <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
-                 </ButtonGroup>
-            </Box> 
+                    <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
+                </ButtonGroup>
+            </Box>
             <div className="board-content">
                 <Grid container>
                     {Object.keys(boardData).map((category, index) => (
@@ -169,7 +176,7 @@ const Boards = ({ location }: { location: Location }) => {
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
                                 {(boardData as any)[category].map((note: NoteType, index: number) => (
-                                    <Note id={`note${index}`} username={username} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler}/>
+                                    <Note id={`note${index}`} userId={userId} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler} />
                                 ))}
                             </Grid>
                         </Grid>

@@ -16,6 +16,7 @@ import { useHistory } from 'react-router'
 import { createBoard, joinBoard } from '../../services/board.service';
 import './LandingPage.scss';
 import boardImage from '../../assets/board.svg';
+import { getUserIDStorageKey } from '../../common-utils';
 
 
 const LandingPage = () => {
@@ -46,7 +47,7 @@ const LandingPage = () => {
     };
 
     const getUserIdForBoard = (boardId: string) => {
-        const USER_ID_KEY = `userIdforboard ${boardId}`;
+        const USER_ID_KEY = getUserIDStorageKey(boardId);
         let userId = localStorage.getItem(USER_ID_KEY);
         if (!userId) {
             userId = uuid();
@@ -62,8 +63,8 @@ const LandingPage = () => {
         setJoinBoardError({ errorField: '', message: '' });
         joinBoard(boardId, getUserIdForBoard(boardId))
             .then(boardJoiningResult => {
-                const { boardId, userId } = boardJoiningResult;
-                browserHistory.push(`/boards/${boardId}?username=${userId}`);
+                const { boardId } = boardJoiningResult;
+                browserHistory.push(`/boards/${boardId}`);
             })
             .catch(error => {
                 setJoinBoardError({ errorField: 'boardId', message: error.message });
