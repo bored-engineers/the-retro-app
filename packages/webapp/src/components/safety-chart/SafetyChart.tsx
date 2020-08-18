@@ -27,8 +27,8 @@ const SafetyChart = ({ data }: { data: any }) => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
     return (
-        <BarChart width={400} height={300} data={graphData} barGap="0" barCategoryGap={0}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart width={300} height={250} data={graphData} barGap="0" barCategoryGap={0}
+            margin={{ top: 15, right: 10, left: 5, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="category" dataKey="uv" />
             <YAxis />

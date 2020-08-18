@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography, Button, Box, ButtonGroup } from '@material-ui/core';
+import { Grid, Typography, Button, Box, ButtonGroup, Popper, Paper, ClickAwayListener } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
 import BadMoodIcon from '@material-ui/icons/MoodBad';
@@ -8,12 +8,13 @@ import AppreciationIcon from '@material-ui/icons/Stars';
 import AddIcon from '@material-ui/icons/AddCircle';
 import io from 'socket.io-client'
 import Navbar from '../navbar/Navbar';
-import BoardInfo from '../board-info/BoardInfo';
 import NoteForm from '../note-form/NoteForm';
 import Note from '../note/Note';
 import IconButton from '@material-ui/core/IconButton';
 import SafetyCheck from '../safety-check/SafetyCheck';
 import { getUserIDStorageKey } from '../../common-utils';
+import SafetyChart from '../safety-chart/SafetyChart';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './Board.scss';
 
@@ -32,6 +33,21 @@ const Boards = ({ location }: { location: Location }) => {
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
 
     const [safetyCheck, setSafetyCheck] = useState({ open: false });
+
+    const [isSafe, setIsSafe] = useState(false);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popper' : undefined;
+
+    const onSafetyResultClickHandler = (event: any) => {
+        event.stopPropagation()
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+    }
+
+    const onSafetyCheckClickAway = (event: any) => {
+        setAnchorEl(null);
+    }
 
     const CATEGORIES_TITLE_MAP = new Map<string, string>()
         .set('went-well', 'What went well')
@@ -91,9 +107,12 @@ const Boards = ({ location }: { location: Location }) => {
         if (Boolean(userId)) return userId;
         else throw new Error('Invalid user id');
     }
+    useEffect(() => {
+        setIsSafe(safetyScores.every(score => score > 2));
+    }, [safetyScores]);
 
     useEffect(() => {
-        const { boardId } = location.pathname.match(/(\/boards\/(?<boardId>[\w\d-]*))/)?.groups || { boardId: '' };
+        const { boardId } = location.pathname.match(/(\/boards\/(?<boardId>[\w\d-]*))/) ?.groups || { boardId: '' };
         if (!boardId) throw new Error('Invalid board id');
         const userId = getUserIdForBoard(boardId);
 
@@ -161,12 +180,24 @@ const Boards = ({ location }: { location: Location }) => {
 
     return (
         <div className="board">
-            <Navbar />
-            <BoardInfo boardId={boardId} safetyScores={safetyScores} />
-            <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box" flexDirection="row-reverse">
+            <Navbar boardId={boardId} />
+            <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
+            <Box display="flex" flexDirection="row">
                 <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
                     <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
                 </ButtonGroup>
+                </Box>
+                <Box display="flex" flexGrow={1} flexDirection="row-reverse">
+                    <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
+
+                    <Typography className='safety-score-info'></Typography>
+
+                    <Popper id={id} open={open} anchorEl={anchorEl}>
+                        <ClickAwayListener onClickAway={onSafetyCheckClickAway}>
+                            <Paper variant='elevation' elevation={3} className='safety-graph'><SafetyChart data={safetyScores} /></ Paper>
+                        </ClickAwayListener>
+                    </Popper>
+                </Box>
             </Box>
             <div className="board-content">
                 <Grid container>
