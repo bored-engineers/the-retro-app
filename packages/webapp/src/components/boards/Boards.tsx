@@ -167,7 +167,7 @@ const Boards = ({ location }: { location: Location }) => {
                 return { ...boardData, [deletedNote.category]: notesFromCategory };
             });
         });
-    });
+    }, []);
 
     useEffect(() => {
         const SAFETY_CHECK_KEY = 'safty-check' + boardId + userId;
