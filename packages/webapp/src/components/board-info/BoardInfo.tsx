@@ -1,89 +1,86 @@
-import React, { useEffect, useState } from 'react';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
-import IconButton from '@material-ui/core/IconButton';
 import { exportBoard } from '../../services/board.service'
-
 import Tooltip from '@material-ui/core/Tooltip';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Popper from '@material-ui/core/Popper';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-
-import SafetyChart from '../safety-chart/SafetyChart';
 import './BoardInfo.scss'
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup, Menu, MenuItem } from '@material-ui/core';
+import { useHistory } from 'react-router'
+import PictureAsPdfRoundedIcon from '@material-ui/icons/PictureAsPdfRounded';
+import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
+import FeedbackRoundedIcon from '@material-ui/icons/FeedbackRounded';
 
 type BoardInfoPropType = {
     boardId: string;
-    safetyScores: number[];
 };
 
-const BoardInfo = ({ boardId, safetyScores }: BoardInfoPropType) => {
+const BoardInfo = ({ boardId }: BoardInfoPropType) => {
+    const browserHistory = useHistory();
 
-    const [isSafe, setIsSafe] = useState(false);
     const [openTooltip, setOpenTooltip] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const onClickBoardInfoHeading = async (event: any) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const onBoardCopyCLick = async (event: any) => {
+        setAnchorEl(null);
         event.stopPropagation()
         navigator.clipboard.writeText(boardId);
         setOpenTooltip(true);
         await new Promise(r => setTimeout(r, 2000));
         setOpenTooltip(false);
+      };
+
+    const onExportBoard = (event: any) => {
+        setAnchorEl(null);
+        exportBoard(boardId);
     };
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popper' : undefined;
 
-    const onSafetyResultClickHandler = (event: any) => {
-        event.stopPropagation()
-        setAnchorEl(anchorEl ? null : event.currentTarget);
-    }
-
-    useEffect(() => {
-        setIsSafe(safetyScores.every(score => score > 2));
-    }, [safetyScores]);
+    const onFeedBack = (event: any) => {
+        setAnchorEl(null);
+        browserHistory.push(`/survey`);
+    };
+    const handleClose = () => {
+       setAnchorEl(null);
+      };
 
     return (
         <div className='board-info'>
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="additional-actions1-content" aria-label="Expand" id="panel1a-header">
-                    <Tooltip
-                        PopperProps={{
-                            disablePortal: true,
-                        }}
-                        open={openTooltip}
-                        disableFocusListener
-                        disableHoverListener
-                        disableTouchListener
-                        title="Successfully copied to clipboard"
-                        placement="bottom-start"
-                    >
-                        <span className="board-info">
-                            <Tooltip title="Click to copy Board Id" aria-label="copy" placement="top-start">
-                            <ButtonGroup color="primary" variant="outlined" size="small" aria-label="small outlined button group">
-                             <Button onClick={onClickBoardInfoHeading}>{`Board ID: ${boardId}`}</Button>
-                             </ButtonGroup>
-                            </Tooltip>
-                        </span>
+            <Tooltip
+                PopperProps={{
+                    disablePortal: true,
+                }}
+                open={openTooltip}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                title="Successfully copied to clipboard"
+                placement="bottom-start"
+            >
+                <span className="board-info">
+                    <Tooltip title={`Board ID: ${boardId}`} aria-label="copy" placement="top-start">
+                        <ButtonGroup size="small" aria-label="small outlined button group">
+                            <Button className="board-button-group" variant="outlined" onMouseOver={onClickBoardInfoHeading}>{`Board : ${boardId}`}</Button>
+                        </ButtonGroup>
                     </Tooltip>
-                    <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
-
-                    <Typography className='safety-score-info'></Typography>
-                    <Popper id={id} open={open} anchorEl={anchorEl}>
-                        <Paper variant='elevation' elevation={3} className='safety-graph'><SafetyChart data={safetyScores} /></ Paper>
-                    </Popper>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <span className='export-button'>Export Board<IconButton onClick={() => {
-                        exportBoard(boardId)
-                    }}><GetAppRoundedIcon className='export-icon' /></IconButton></span>
-                </AccordionDetails>
-            </Accordion>
+                    <Menu
+                        id="board-menu"
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                        className="board-menu"
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                    >
+                        <MenuItem className="board-menu" onClick={onBoardCopyCLick}><FileCopyRoundedIcon className="menuitem-icon" /><Typography className="menuitem-text" variant="button">COPY BOARD ID</Typography></MenuItem>
+                        <MenuItem className="board-menu" onClick={onExportBoard}><PictureAsPdfRoundedIcon className="menuitem-icon" /><Typography className="menuitem-text" variant="button">EXPORT BOARD AS PDF</Typography></MenuItem>
+                    </Menu>
+                </span>
+            </Tooltip>
+            <Button onClick={onFeedBack}><FeedbackRoundedIcon className="feedback-button" /></Button>
         </div>
     );
 }

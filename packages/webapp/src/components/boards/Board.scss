@@ -40,3 +40,25 @@
     padding: 0.5%;
     border-bottom-color: rgb(194, 194, 194) !important;
 }
+.popper{
+    border: 1px solid;
+    padding: 1vh;
+    background-color: white;
+}
+.safety-result-info{
+    margin-left: 0.5vw;
+}
+.safety-graph{
+    padding-top:2vh;
+    margin-top: 1vh;
+}
+.safety-success{
+    float: left !important;
+    border-color: rgb(69, 199, 80) !important;
+    color: rgb(69, 199, 80) !important;
+}
+.safety-failure{
+    float: left !important;
+    border-color: rgb(209, 73, 73) !important;
+    color: rgb(209, 73, 73) !important;
+}

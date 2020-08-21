@@ -3,13 +3,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Avatar from "@material-ui/core/Avatar";
-import PersonIcon from '@material-ui/icons/Person';
-import { useHistory } from 'react-router'
-import HomeLogo from '../../assets/Logo.png'
+import { useHistory } from 'react-router';
+import HomeLogo from '../../assets/Logo.png';
+import BoardInfo from '../board-info/BoardInfo';
 
 import './Navbar.scss';
 
-const Navbar = () => {
+type BoardInfoPropType = {
+    boardId: string;
+};
+const Navbar = ({ boardId }: BoardInfoPropType) => {
     const browserHistory = useHistory();
     return (
         <div className='navbar'>
@@ -19,9 +22,9 @@ const Navbar = () => {
                             <img alt="Home Logog" src={HomeLogo} />
                         </Avatar>
                     <Typography variant="h6" className='title'>The Retro App</Typography>
-                    <Avatar className='user-icon'>
-                        <PersonIcon />
-                    </Avatar>
+                    <div className='user-icon'>
+                       <BoardInfo boardId={boardId}/>
+                    </div>
                 </Toolbar>
             </AppBar>
         </div>

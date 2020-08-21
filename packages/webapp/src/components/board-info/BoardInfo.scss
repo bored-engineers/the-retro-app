@@ -19,24 +19,20 @@
 .export-icon{
     color: rgb(52, 231, 97)
 }
-
-.popper{
-    border: 1px solid;
-    padding: 1vh;
-    background-color: white;
+.menuitem-text{
+    margin-left: 5% !important;
+    margin-right: 8% !important;
+    font-size: 8.5pt !important;
 }
-.safety-result-info{
-    margin-left: 0.5vw;
+.menuitem-icon{
+    color: #3f51b5 !important;
 }
-.safety-graph{
-    padding-top:2vh;
-    margin-top: 1vh;
+.board-button-group{
+    color: rgb(255, 255, 255) !important;
+    border-color: rgb(255, 255, 255) !important;
+    font-size: 8.5pt !important;
 }
-.safety-success{
-    border-color: rgb(69, 199, 80) !important;
-    color: rgb(69, 199, 80) !important;
-}
-.safety-failure{
-    border-color: rgb(209, 73, 73) !important;
-    color: rgb(209, 73, 73) !important;
+.feedback-button{
+    color: #ebc856 !important;
+    size: 10pt !important;
 }
