@@ -7,13 +7,13 @@ import ActionItemIcon from '@material-ui/icons/PlaylistAddCheck';
 import AppreciationIcon from '@material-ui/icons/Stars';
 import AddIcon from '@material-ui/icons/AddCircle';
 import io from 'socket.io-client'
-import Navbar from '../navbar/Navbar';
-import NoteForm from '../note-form/NoteForm';
-import Note from '../note/Note';
+import Navbar from '../common/navbar/Navbar';
+import NoteForm from './note-form/NoteForm';
+import Note from './note/Note';
 import IconButton from '@material-ui/core/IconButton';
-import SafetyCheck from '../safety-check/SafetyCheck';
+import SafetyCheck from './safety-check/SafetyCheck';
 import { getUserIDStorageKey } from '../../common-utils';
-import SafetyChart from '../safety-chart/SafetyChart';
+import SafetyChart from './safety-chart/SafetyChart';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './Board.scss';

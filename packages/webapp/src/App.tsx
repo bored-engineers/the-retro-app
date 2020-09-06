@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, HashRouter } from 'react-router-dom';
-import {ErrorBoundary} from './components/error-boundary/ErrorBoundary';
+import {ErrorBoundary} from './components/common/error-boundary/ErrorBoundary';
 import LandingPage from './components/landing-page/LandingPage';
-import Boards from './components/boards/Boards';
-import FeedbackSurvey from './components/feedback-survey/FeedbackSurvey';
+import Boards from './components/board/Board';
+import FeedbackSurvey from './components/feedback/FeedbackSurvey';
 
 const App = () => (
     <ErrorBoundary>
