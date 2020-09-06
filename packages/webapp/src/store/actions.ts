@@ -1,0 +1,3 @@
+export const SET_BOARDID = 'SET_BOARDID';
+export const SET_USERID = 'SET_USERID';
+export const SET_SAFETY_SCORES = 'SET_SAFETY_SCORES';

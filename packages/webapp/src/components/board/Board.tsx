@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import io from 'socket.io-client'
 import { Grid, Typography, Button, Box, ButtonGroup, Popper, Paper, ClickAwayListener } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
@@ -6,32 +9,32 @@ import BadMoodIcon from '@material-ui/icons/MoodBad';
 import ActionItemIcon from '@material-ui/icons/PlaylistAddCheck';
 import AppreciationIcon from '@material-ui/icons/Stars';
 import AddIcon from '@material-ui/icons/AddCircle';
-import io from 'socket.io-client'
+import { TAction, TState } from '../../store/interfaces';
+import * as ActionTypes from '../../store/actions';
 import Navbar from '../common/navbar/Navbar';
 import NoteForm from './note-form/NoteForm';
 import Note from './note/Note';
 import IconButton from '@material-ui/core/IconButton';
 import SafetyCheck from './safety-check/SafetyCheck';
-import { getUserIDStorageKey } from '../../common-utils';
 import SafetyChart from './safety-chart/SafetyChart';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './Board.scss';
-
+import { getUserIDStorageKey } from '../../common-utils';
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
+type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[] }
+type TBoardDispatchProps = { setSafetyScores: Function, setBoardId: Function, setUserId: Function };
+type TBoardProps = TBoardStateProps & TBoardDispatchProps & { location: Location };
+
 let socket: SocketIOClient.Socket;
 
 const isEmpty = (data: any) => Object.keys(data).length === 0;
 
-const Boards = ({ location }: { location: Location }) => {
+
+const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafetyScores, location }: TBoardProps) => {
     const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || '';
-
-    const [safetyScores, setSafetyScores] = useState<number[]>([]);
-    const [boardId, setBoardId] = useState('');
-    const [userId, setUserId] = useState('');
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
-
     const [safetyCheck, setSafetyCheck] = useState({ open: false });
 
     const [isSafe, setIsSafe] = useState(false);
@@ -107,24 +110,30 @@ const Boards = ({ location }: { location: Location }) => {
         if (Boolean(userId)) return userId;
         else throw new Error('Invalid user id');
     }
+
+    const getBoardIdFromUrl = (url: string) => {
+        const { boardId } = url.match(/(\/boards\/(?<boardId>[\w\d-]*))/)?.groups || { boardId: '' };
+        if (Boolean(boardId)) return boardId;
+        else throw new Error('Invalid board id');
+    }
+
     useEffect(() => {
         setIsSafe(safetyScores.every(score => score > 2));
     }, [safetyScores]);
 
     useEffect(() => {
-        const { boardId } = location.pathname.match(/(\/boards\/(?<boardId>[\w\d-]*))/) ?.groups || { boardId: '' };
-        if (!boardId) throw new Error('Invalid board id');
-        const userId = getUserIdForBoard(boardId);
+        const boardIdFromUrl = getBoardIdFromUrl(location.pathname);
+        const userIdFromStorage = getUserIdForBoard(boardIdFromUrl);
 
-        setBoardId(boardId);
-        setUserId(userId as string);
+        if (!boardId) setBoardId(boardIdFromUrl);
+        if (!userId) setUserId(userIdFromStorage);
 
-        socket = io(SOCKET_URL, { query: { userId: userId, boardId: boardId } });
+        socket = io(SOCKET_URL, { query: { userId, boardId } });
 
         socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
             const { cards: notes, safetyScores } = data;
             setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] })
-            setSafetyScores([...safetyScores]);
+            setSafetyScores(safetyScores);
             if (!isEmpty(notes)) {
                 notes.forEach(note => {
                     setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
@@ -132,7 +141,7 @@ const Boards = ({ location }: { location: Location }) => {
             }
         });
 
-    }, [SOCKET_URL, location]);
+    }, [SOCKET_URL, boardId, location.pathname, setBoardId, setSafetyScores, setUserId, userId]);
 
     useEffect(() => {
         socket.on('add-card', (newNote: NoteType) => {
@@ -152,9 +161,9 @@ const Boards = ({ location }: { location: Location }) => {
 
     useEffect(() => {
         socket.on('update-safety-scores', (newSafetyScores: number[]) => {
-            setSafetyScores([...newSafetyScores]);
+            setSafetyScores(newSafetyScores);
         });
-    }, []);
+    }, [setSafetyScores]);
 
     useEffect(() => {
         socket.on('remove-card', (deletedNote: NoteType) => {
@@ -182,10 +191,10 @@ const Boards = ({ location }: { location: Location }) => {
         <div className="board">
             <Navbar boardId={boardId} />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
-            <Box display="flex" flexDirection="row">
-                <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
-                    <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
-                </ButtonGroup>
+                <Box display="flex" flexDirection="row">
+                    <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
+                        <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
+                    </ButtonGroup>
                 </Box>
                 <Box display="flex" flexGrow={1} flexDirection="row-reverse">
                     <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
@@ -202,7 +211,7 @@ const Boards = ({ location }: { location: Location }) => {
             <div className="board-content">
                 <Grid container>
                     {Object.keys(boardData).map((category, index) => (
-                        <Grid id={`categoryColumnGrid${index}`} item xs={12} sm={3}>
+                        <Grid id={`categoryColumnGrid${index}`} item xs={12} sm={3} key={`categoryColumnGrid${index}`}>
                             {CATEGORIES_ICON_MAP.get(category)}
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
@@ -220,4 +229,20 @@ const Boards = ({ location }: { location: Location }) => {
     );
 }
 
-export default Boards;
+const mapStateToProps = (state: TState): TBoardStateProps => {
+    return {
+        boardId: state.boardId,
+        userId: state.userId,
+        safetyScores: state.safetyScores
+    }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps => {
+    return {
+        setSafetyScores: (safetyScores: number[]) => dispatch({ type: ActionTypes.SET_SAFETY_SCORES, safetyScores }),
+        setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
+        setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId })
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Boards);
