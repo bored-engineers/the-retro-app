@@ -1,3 +1,19 @@
 export const SET_BOARDID = 'SET_BOARDID';
 export const SET_USERID = 'SET_USERID';
 export const SET_SAFETY_SCORES = 'SET_SAFETY_SCORES';
+
+/** Actions for Socket Events */
+export const SOCKET_CONNECT = 'SOCKET_CONNECT';
+export const SOCKET_DISCONNECT = 'SOCKET_DISCONNECT';
+export const SOCKET_CONNECTED = 'SOCKET_CONNECTED';
+export const SOCKET_DISCONNECTED = 'SOCKET_DISCONNECTED';
+export const SOCKET_ERROR = 'SOCKET_ERROR';
+
+export const CREATE_NOTE = 'CREATE_NOTE';
+export const REMOVE_NOTE = 'REMOVE_NOTE';
+export const UPDATE_NOTE = 'UPDATE_NOTE';
+
+export const UPDATE_VOTE = 'UPDATE_VOTE';
+
+export const UPDATE_SAFETY_SCORE = 'UPDATE_SAFETY_SCORE';
+

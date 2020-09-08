@@ -1,12 +1,7 @@
 import * as actionTypes from './actions';
-import { TState, TAction } from './interfaces';
+import { TState, TAction, ConnectionStatus } from './interfaces';
 
-const initialState: TState = {
-    boardId: '',
-    userId: '',
-    notes: [],
-    safetyScores: []
-}
+const initialState: TState = { boardId: '', userId: '', notes: [], safetyScores: [], connectionStatus: ConnectionStatus.DISCONNECTED };
 
 const reducer = (state = initialState, action: TAction): TState => {
     switch (action.type) {
@@ -24,6 +19,16 @@ const reducer = (state = initialState, action: TAction): TState => {
             return {
                 ...state,
                 safetyScores: action.safetyScores
+            }
+        case actionTypes.SOCKET_CONNECTED:
+            return {
+                ...state,
+                connectionStatus: ConnectionStatus.CONNECTED
+            }
+        case actionTypes.SOCKET_DISCONNECTED:
+            return {
+                ...state,
+                connectionStatus: ConnectionStatus.DISCONNECTED
             }
         default: return state;
     }

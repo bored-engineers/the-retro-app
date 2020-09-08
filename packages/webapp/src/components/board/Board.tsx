@@ -9,7 +9,7 @@ import BadMoodIcon from '@material-ui/icons/MoodBad';
 import ActionItemIcon from '@material-ui/icons/PlaylistAddCheck';
 import AppreciationIcon from '@material-ui/icons/Stars';
 import AddIcon from '@material-ui/icons/AddCircle';
-import { TAction, TState } from '../../store/interfaces';
+import { TAction, TState, ConnectionStatus } from '../../store/interfaces';
 import * as ActionTypes from '../../store/actions';
 import Navbar from '../common/navbar/Navbar';
 import NoteForm from './note-form/NoteForm';
@@ -23,8 +23,8 @@ import './Board.scss';
 import { getUserIDStorageKey } from '../../common-utils';
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
-type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[] }
-type TBoardDispatchProps = { setSafetyScores: Function, setBoardId: Function, setUserId: Function };
+type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus }
+type TBoardDispatchProps = { setSafetyScores: Function, setBoardId: Function, setUserId: Function, socketConnect: Function };
 type TBoardProps = TBoardStateProps & TBoardDispatchProps & { location: Location };
 
 let socket: SocketIOClient.Socket;
@@ -32,7 +32,7 @@ let socket: SocketIOClient.Socket;
 const isEmpty = (data: any) => Object.keys(data).length === 0;
 
 
-const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafetyScores, location }: TBoardProps) => {
+const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafetyScores, location, socketConnect, connectionStatus }: TBoardProps) => {
     const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || '';
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
     const [safetyCheck, setSafetyCheck] = useState({ open: false });
@@ -128,54 +128,55 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
         if (!boardId) setBoardId(boardIdFromUrl);
         if (!userId) setUserId(userIdFromStorage);
 
-        socket = io(SOCKET_URL, { query: { userId, boardId } });
+        socketConnect(userId, boardId);
 
-        socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
-            const { cards: notes, safetyScores } = data;
-            setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] })
-            setSafetyScores(safetyScores);
-            if (!isEmpty(notes)) {
-                notes.forEach(note => {
-                    setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
-                });
-            }
-        });
+        // socket = io(SOCKET_URL, { query: { userId, boardId } });
 
-    }, [SOCKET_URL, boardId, location.pathname, setBoardId, setSafetyScores, setUserId, userId]);
+        // socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
+        //     const { cards: notes, safetyScores } = data;
+        //     setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] })
+        //     setSafetyScores(safetyScores);
+        //     if (!isEmpty(notes)) {
+        //         notes.forEach(note => {
+        //             setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
+        //         });
+        //     }
+        // });
+    }, [SOCKET_URL, boardId, location.pathname, setBoardId, setSafetyScores, setUserId, userId, socketConnect]);
 
     useEffect(() => {
-        socket.on('add-card', (newNote: NoteType) => {
-            setBoardData((boardData: any) => {
-                const notesFromCategory = boardData[newNote.category];
-                const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === newNote.cardId));
-                if (existingNoteIndex === -1) {
-                    notesFromCategory.push(newNote);
-                    return { ...boardData, [newNote.category]: notesFromCategory }
-                } else {
-                    notesFromCategory[existingNoteIndex] = newNote;
-                    return { ...boardData, [newNote.category]: notesFromCategory }
-                }
-            });
-        });
+        // socket.on('add-card', (newNote: NoteType) => {
+        //     setBoardData((boardData: any) => {
+        //         const notesFromCategory = boardData[newNote.category];
+        //         const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === newNote.cardId));
+        //         if (existingNoteIndex === -1) {
+        //             notesFromCategory.push(newNote);
+        //             return { ...boardData, [newNote.category]: notesFromCategory }
+        //         } else {
+        //             notesFromCategory[existingNoteIndex] = newNote;
+        //             return { ...boardData, [newNote.category]: notesFromCategory }
+        //         }
+        //     });
+        // });
     }, []);
 
     useEffect(() => {
-        socket.on('update-safety-scores', (newSafetyScores: number[]) => {
-            setSafetyScores(newSafetyScores);
-        });
+        // socket.on('update-safety-scores', (newSafetyScores: number[]) => {
+        //     setSafetyScores(newSafetyScores);
+        // });
     }, [setSafetyScores]);
 
     useEffect(() => {
-        socket.on('remove-card', (deletedNote: NoteType) => {
-            setBoardData((boardData: any) => {
-                const notesFromCategory = boardData[deletedNote.category];
-                const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === deletedNote.cardId));
-                if (existingNoteIndex !== -1) {
-                    notesFromCategory.splice(existingNoteIndex, 1);
-                }
-                return { ...boardData, [deletedNote.category]: notesFromCategory };
-            });
-        });
+        // socket.on('remove-card', (deletedNote: NoteType) => {
+        //     setBoardData((boardData: any) => {
+        //         const notesFromCategory = boardData[deletedNote.category];
+        //         const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === deletedNote.cardId));
+        //         if (existingNoteIndex !== -1) {
+        //             notesFromCategory.splice(existingNoteIndex, 1);
+        //         }
+        //         return { ...boardData, [deletedNote.category]: notesFromCategory };
+        //     });
+        // });
     }, []);
 
     useEffect(() => {
@@ -190,6 +191,7 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
     return (
         <div className="board">
             <Navbar boardId={boardId} />
+            {connectionStatus}
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexDirection="row">
                     <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
@@ -233,7 +235,8 @@ const mapStateToProps = (state: TState): TBoardStateProps => {
     return {
         boardId: state.boardId,
         userId: state.userId,
-        safetyScores: state.safetyScores
+        safetyScores: state.safetyScores,
+        connectionStatus: state.connectionStatus
     }
 }
 
@@ -241,7 +244,8 @@ const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps =>
     return {
         setSafetyScores: (safetyScores: number[]) => dispatch({ type: ActionTypes.SET_SAFETY_SCORES, safetyScores }),
         setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
-        setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId })
+        setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
+        socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId })
     }
 }
 
