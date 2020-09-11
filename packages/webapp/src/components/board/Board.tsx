@@ -23,17 +23,19 @@ import './Board.scss';
 import { getUserIDStorageKey } from '../../common-utils';
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
-type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus }
-type TBoardDispatchProps = { setSafetyScores: Function, setBoardId: Function, setUserId: Function, socketConnect: Function };
+type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus, notes: any }
+type TBoardDispatchProps = {
+    setSafetyScores: Function, setBoardId: Function, setUserId: Function, socketConnect: Function, createNote: Function, updateSafetyScore: Function,
+    removeNote: Function
+};
 type TBoardProps = TBoardStateProps & TBoardDispatchProps & { location: Location };
 
-let socket: SocketIOClient.Socket;
-
-const isEmpty = (data: any) => Object.keys(data).length === 0;
-
-
-const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafetyScores, location, socketConnect, connectionStatus }: TBoardProps) => {
+const Boards = ({
+    userId, boardId, safetyScores, setBoardId, setUserId, setSafetyScores, location, socketConnect, connectionStatus, notes, createNote,
+    updateSafetyScore, removeNote
+}: TBoardProps) => {
     const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || '';
+
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
     const [safetyCheck, setSafetyCheck] = useState({ open: false });
 
@@ -53,9 +55,9 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
     }
 
     const CATEGORIES_TITLE_MAP = new Map<string, string>()
-        .set('went-well', 'What went well')
-        .set('not-well', 'What didn\'t go well')
-        .set('action-items', 'Action items')
+        .set('wentWell', 'What went well')
+        .set('notWell', 'What didn\'t go well')
+        .set('actionItems', 'Action items')
         .set('appreciations', 'Appreciations');
 
     const [boardData, setBoardData] = useState({
@@ -65,25 +67,15 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
         'appreciations': [] as any[]
     });
 
-    const deleteHandler = (cardId: string) => {
-        socket.emit('remove-card', cardId);
-    };
+    const deleteHandler = (noteId: string) => removeNote(noteId);
 
-    const safetyScoreSubmitHandler = (value: Number) => {
-        socket.emit('submit-safety-score', value);
-    };
+    const safetyScoreSubmitHandler = (value: Number) => updateSafetyScore(value);
 
-    const updateNoteHandler = (note: NoteType) => {
-        socket.emit('update-card', note);
-    };
+    const updateNoteHandler = (note: NoteType) => { }
 
-    const updateVoteHandler = (note: NoteType) => {
-        socket.emit('vote-card', note);
-    };
+    const updateVoteHandler = (note: NoteType) => { }
 
-    const createNoteHandler = (categoryId: string, text: string) => {
-        socket.emit('create-card', { category: categoryId, text: text });
-    };
+    const createNoteHandler = (categoryId: string, text: string) => createNote(categoryId, text);
 
     const sortCardHandler = () => {
         const currentBoardData = boardData;
@@ -100,9 +92,9 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton color='primary' onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
 
     const CATEGORIES_ICON_MAP = new Map<string, object>()
-        .set('went-well', <span id="wentWellColumn" className='category-title'><GoodMoodIcon className='heading-well-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
-        .set('not-well', <span id="notWellColumn" className='category-title'><BadMoodIcon color='error' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
-        .set('action-items', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
+        .set('wentWell', <span id="wentWellColumn" className='category-title'><GoodMoodIcon className='heading-well-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
+        .set('notWell', <span id="notWellColumn" className='category-title'><BadMoodIcon color='error' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
+        .set('actionItems', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
         .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon className='heading-appreciation-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
 
     const getUserIdForBoard = (boardId: string) => {
@@ -130,54 +122,7 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
 
         socketConnect(userId, boardId);
 
-        // socket = io(SOCKET_URL, { query: { userId, boardId } });
-
-        // socket.on('welcome', (data: { boardId: string, cards: NoteType[], safetyScores: number[] }) => {
-        //     const { cards: notes, safetyScores } = data;
-        //     setBoardData({ 'went-well': [], 'not-well': [], 'action-items': [], 'appreciations': [] })
-        //     setSafetyScores(safetyScores);
-        //     if (!isEmpty(notes)) {
-        //         notes.forEach(note => {
-        //             setBoardData(boardData => ({ ...boardData, [note.category]: [note, ...(boardData as any)[note.category]] }));
-        //         });
-        //     }
-        // });
     }, [SOCKET_URL, boardId, location.pathname, setBoardId, setSafetyScores, setUserId, userId, socketConnect]);
-
-    useEffect(() => {
-        // socket.on('add-card', (newNote: NoteType) => {
-        //     setBoardData((boardData: any) => {
-        //         const notesFromCategory = boardData[newNote.category];
-        //         const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === newNote.cardId));
-        //         if (existingNoteIndex === -1) {
-        //             notesFromCategory.push(newNote);
-        //             return { ...boardData, [newNote.category]: notesFromCategory }
-        //         } else {
-        //             notesFromCategory[existingNoteIndex] = newNote;
-        //             return { ...boardData, [newNote.category]: notesFromCategory }
-        //         }
-        //     });
-        // });
-    }, []);
-
-    useEffect(() => {
-        // socket.on('update-safety-scores', (newSafetyScores: number[]) => {
-        //     setSafetyScores(newSafetyScores);
-        // });
-    }, [setSafetyScores]);
-
-    useEffect(() => {
-        // socket.on('remove-card', (deletedNote: NoteType) => {
-        //     setBoardData((boardData: any) => {
-        //         const notesFromCategory = boardData[deletedNote.category];
-        //         const existingNoteIndex = notesFromCategory.findIndex((note: NoteType) => (note.cardId === deletedNote.cardId));
-        //         if (existingNoteIndex !== -1) {
-        //             notesFromCategory.splice(existingNoteIndex, 1);
-        //         }
-        //         return { ...boardData, [deletedNote.category]: notesFromCategory };
-        //     });
-        // });
-    }, []);
 
     useEffect(() => {
         const SAFETY_CHECK_KEY = 'safty-check' + boardId + userId;
@@ -190,8 +135,7 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
 
     return (
         <div className="board">
-            <Navbar boardId={boardId} />
-            {connectionStatus}
+            <Navbar boardId={boardId} connectionStatus={connectionStatus} />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexDirection="row">
                     <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
@@ -212,12 +156,12 @@ const Boards = ({ userId, boardId, safetyScores, setBoardId, setUserId, setSafet
             </Box>
             <div className="board-content">
                 <Grid container>
-                    {Object.keys(boardData).map((category, index) => (
+                    {Object.keys(notes).map((category, index) => (
                         <Grid id={`categoryColumnGrid${index}`} item xs={12} sm={3} key={`categoryColumnGrid${index}`}>
                             {CATEGORIES_ICON_MAP.get(category)}
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
-                                {(boardData as any)[category].map((note: NoteType, index: number) => (
+                                {(notes as any)[category].map((note: NoteType, index: number) => (
                                     <Note id={`note${index}`} userId={userId} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler} />
                                 ))}
                             </Grid>
@@ -236,16 +180,20 @@ const mapStateToProps = (state: TState): TBoardStateProps => {
         boardId: state.boardId,
         userId: state.userId,
         safetyScores: state.safetyScores,
-        connectionStatus: state.connectionStatus
+        connectionStatus: state.connectionStatus,
+        notes: state.boardData
     }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps => {
     return {
+        createNote: (categoryId: string, text: string) => dispatch({ type: ActionTypes.CREATE_NOTE, categoryId, text }),
+        removeNote: (noteId: string) => dispatch({ type: ActionTypes.REMOVE_NOTE, noteId }),
         setSafetyScores: (safetyScores: number[]) => dispatch({ type: ActionTypes.SET_SAFETY_SCORES, safetyScores }),
         setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
         setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
-        socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId })
+        socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId }),
+        updateSafetyScore: (value: number) => dispatch({ type: ActionTypes.UPDATE_SAFETY_SCORE, value })
     }
 }
 

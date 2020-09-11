@@ -6,7 +6,7 @@ export enum ConnectionStatus {
 export type TState = {
     boardId: string;
     userId: string;
-    notes: [];
+    boardData: { wentWell: any[], notWell: any[], actionItems: any[], appreciations: any[] };
     safetyScores: number[]
     connectionStatus: ConnectionStatus
 };

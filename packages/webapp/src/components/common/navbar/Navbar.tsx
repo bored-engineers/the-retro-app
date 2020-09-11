@@ -6,24 +6,29 @@ import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from 'react-router';
 import HomeLogo from '../../../assets/Logo.png';
 import BoardInfo from './board-info/BoardInfo';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 import './Navbar.scss';
+import { ConnectionStatus } from "../../../store/interfaces";
 
 type BoardInfoPropType = {
     boardId: string;
+    connectionStatus: string;
 };
-const Navbar = ({ boardId }: BoardInfoPropType) => {
+const Navbar = ({ boardId, connectionStatus }: BoardInfoPropType) => {
     const browserHistory = useHistory();
+    const getIconStyle = () => connectionStatus === ConnectionStatus.CONNECTED ? 'green': 'red';
     return (
         <div className='navbar'>
             <AppBar position="static">
                 <Toolbar className="toolbar">
-                        <Avatar variant="rounded" src="Logo.png" className="navbar-logo" onClick={() => { browserHistory.push('/') }}>
-                            <img alt="Home Logog" src={HomeLogo} />
-                        </Avatar>
+                    <Avatar variant="rounded" src="Logo.png" className="navbar-logo" onClick={() => { browserHistory.push('/') }}>
+                        <img alt="Home Logog" src={HomeLogo} />
+                    </Avatar>
                     <Typography variant="h6" className='title'>The Retro App</Typography>
+                    <FiberManualRecordIcon style={{ color: getIconStyle() }} />
                     <div className='user-icon'>
-                       <BoardInfo boardId={boardId}/>
+                        <BoardInfo boardId={boardId} />
                     </div>
                 </Toolbar>
             </AppBar>
