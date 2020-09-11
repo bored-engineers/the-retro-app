@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import io from 'socket.io-client'
 import { Grid, Typography, Button, Box, ButtonGroup, Popper, Paper, ClickAwayListener } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
@@ -25,16 +24,15 @@ import { getUserIDStorageKey } from '../../common-utils';
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
 type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus, notes: any }
 type TBoardDispatchProps = {
-    setSafetyScores: Function, setBoardId: Function, setUserId: Function, socketConnect: Function, createNote: Function, updateSafetyScore: Function,
-    removeNote: Function
+    setBoardId: Function, setUserId: Function, socketConnect: Function, createNote: Function, updateSafetyScore: Function,
+    removeNote: Function, updateVote: Function, updateNote: Function
 };
 type TBoardProps = TBoardStateProps & TBoardDispatchProps & { location: Location };
 
 const Boards = ({
-    userId, boardId, safetyScores, setBoardId, setUserId, setSafetyScores, location, socketConnect, connectionStatus, notes, createNote,
-    updateSafetyScore, removeNote
+    userId, boardId, safetyScores, setBoardId, setUserId, location, socketConnect, connectionStatus, notes, createNote,
+    updateSafetyScore, removeNote, updateVote, updateNote
 }: TBoardProps) => {
-    const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || '';
 
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
     const [safetyCheck, setSafetyCheck] = useState({ open: false });
@@ -60,34 +58,27 @@ const Boards = ({
         .set('actionItems', 'Action items')
         .set('appreciations', 'Appreciations');
 
-    const [boardData, setBoardData] = useState({
-        'went-well': [] as any[],
-        'not-well': [] as any[],
-        'action-items': [] as any[],
-        'appreciations': [] as any[]
-    });
-
     const deleteHandler = (noteId: string) => removeNote(noteId);
 
     const safetyScoreSubmitHandler = (value: Number) => updateSafetyScore(value);
 
-    const updateNoteHandler = (note: NoteType) => { }
+    const updateNoteHandler = (note: NoteType) => updateNote(note);
 
-    const updateVoteHandler = (note: NoteType) => { }
+    const updateVoteHandler = (note: NoteType) => updateVote(note);
 
     const createNoteHandler = (categoryId: string, text: string) => createNote(categoryId, text);
 
-    const sortCardHandler = () => {
-        const currentBoardData = boardData;
-        const sortedBoard = Object.keys(currentBoardData).reduce((sortedBoarData, category: string) => {
-            const sortedCardsWithinCategory = (currentBoardData as any)[category].sort((card1: any, card2: any) => {
-                return card2.votes.length - card1.votes.length;
-            });
-            return { ...sortedBoarData, [category]: sortedCardsWithinCategory };
-        }, {});
+    // const sortCardHandler = () => {
+    //     const currentBoardData = boardData;
+    //     const sortedBoard = Object.keys(currentBoardData).reduce((sortedBoarData, category: string) => {
+    //         const sortedCardsWithinCategory = (currentBoardData as any)[category].sort((card1: any, card2: any) => {
+    //             return card2.votes.length - card1.votes.length;
+    //         });
+    //         return { ...sortedBoarData, [category]: sortedCardsWithinCategory };
+    //     }, {});
 
-        setBoardData(sortedBoard as any);
-    };
+    //     setBoardData(sortedBoard as any);
+    // };
 
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton color='primary' onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
 
@@ -122,7 +113,7 @@ const Boards = ({
 
         socketConnect(userId, boardId);
 
-    }, [SOCKET_URL, boardId, location.pathname, setBoardId, setSafetyScores, setUserId, userId, socketConnect]);
+    }, [boardId, location.pathname, setBoardId, setUserId, userId, socketConnect]);
 
     useEffect(() => {
         const SAFETY_CHECK_KEY = 'safty-check' + boardId + userId;
@@ -138,9 +129,9 @@ const Boards = ({
             <Navbar boardId={boardId} connectionStatus={connectionStatus} />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexDirection="row">
-                    <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
+                    {/* <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
                         <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
-                    </ButtonGroup>
+                    </ButtonGroup> */}
                 </Box>
                 <Box display="flex" flexGrow={1} flexDirection="row-reverse">
                     <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
@@ -189,11 +180,12 @@ const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps =>
     return {
         createNote: (categoryId: string, text: string) => dispatch({ type: ActionTypes.CREATE_NOTE, categoryId, text }),
         removeNote: (noteId: string) => dispatch({ type: ActionTypes.REMOVE_NOTE, noteId }),
-        setSafetyScores: (safetyScores: number[]) => dispatch({ type: ActionTypes.SET_SAFETY_SCORES, safetyScores }),
+        updateNote: (note: NoteType) => dispatch({ type: ActionTypes.UPDATE_NOTE, note }),
+        updateVote: (note: NoteType) => dispatch({ type: ActionTypes.UPDATE_VOTE, note }),
         setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
         setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
         socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId }),
-        updateSafetyScore: (value: number) => dispatch({ type: ActionTypes.UPDATE_SAFETY_SCORE, value })
+        updateSafetyScore: (value: number) => dispatch({ type: ActionTypes.UPDATE_SAFETY_SCORE, value }),
     }
 }
 

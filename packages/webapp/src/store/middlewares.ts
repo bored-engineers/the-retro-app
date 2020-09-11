@@ -16,7 +16,7 @@ const SocketEmitEvents = {
 const SocketListnerEvents = {
     INITIALIZE: 'welcome',
     NOTE_ADDED: 'add-card',
-    UPDATE_SAFETY_SCORES: 'update-safety-scores',
+    SAFETY_SCORES_UPDATED: 'update-safety-scores',
     NOTE_REMOVED: 'remove-card'
 };
 
@@ -33,7 +33,7 @@ export const socketMiddleware = () => {
         },
         [SocketListnerEvents.NOTE_ADDED]: (store: any) => (note: any) => { store.dispatch({ type: ActionType.NOTE_ADDED, note }) },
         [SocketListnerEvents.NOTE_REMOVED]: (store: any) => (note: any) => { store.dispatch({ type: ActionType.NOTE_REMOVED, note }) },
-        [SocketListnerEvents.UPDATE_SAFETY_SCORES]: (store: any) => (safetyScores: any) => { store.dispatch({ type: ActionType.SET_SAFETY_SCORES, safetyScores }) },
+        [SocketListnerEvents.SAFETY_SCORES_UPDATED]: (store: any) => (safetyScores: any) => { store.dispatch({ type: ActionType.SET_SAFETY_SCORES, safetyScores }) },
     };
 
     return (store: any) =>
