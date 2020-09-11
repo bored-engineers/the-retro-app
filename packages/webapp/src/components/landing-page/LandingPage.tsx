@@ -138,7 +138,7 @@ const mapStateToProps = (state: TState): TLandingPageStateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<TAction>): TLandingPageDispatchProps => {
     return {
         setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
-        setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId })
+        setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
     }
 }
 

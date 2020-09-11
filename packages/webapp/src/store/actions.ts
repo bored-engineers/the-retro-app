@@ -2,6 +2,7 @@ export const SET_BOARDID = 'SET_BOARDID';
 export const SET_USERID = 'SET_USERID';
 export const SET_SAFETY_SCORES = 'SET_SAFETY_SCORES';
 export const INITIALIZE_BOARD_DATA = 'INITIALIZE_BOARD_DATA';
+export const SORT_BOARD_DATA = 'SORT_BOARD_DATA';
 export const NOTE_ADDED = 'NOTE_ADDED';
 export const NOTE_REMOVED = 'NOTE_REMOVED';
 

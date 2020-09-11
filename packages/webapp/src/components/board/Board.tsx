@@ -25,13 +25,13 @@ type NoteType = { category: string, text: string, boardId: string, cardId: strin
 type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus, notes: any }
 type TBoardDispatchProps = {
     setBoardId: Function, setUserId: Function, socketConnect: Function, createNote: Function, updateSafetyScore: Function,
-    removeNote: Function, updateVote: Function, updateNote: Function
+    removeNote: Function, updateVote: Function, updateNote: Function, sortBoardData: Function
 };
 type TBoardProps = TBoardStateProps & TBoardDispatchProps & { location: Location };
 
 const Boards = ({
     userId, boardId, safetyScores, setBoardId, setUserId, location, socketConnect, connectionStatus, notes, createNote,
-    updateSafetyScore, removeNote, updateVote, updateNote
+    updateSafetyScore, removeNote, updateVote, updateNote, sortBoardData
 }: TBoardProps) => {
 
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
@@ -68,17 +68,7 @@ const Boards = ({
 
     const createNoteHandler = (categoryId: string, text: string) => createNote(categoryId, text);
 
-    // const sortCardHandler = () => {
-    //     const currentBoardData = boardData;
-    //     const sortedBoard = Object.keys(currentBoardData).reduce((sortedBoarData, category: string) => {
-    //         const sortedCardsWithinCategory = (currentBoardData as any)[category].sort((card1: any, card2: any) => {
-    //             return card2.votes.length - card1.votes.length;
-    //         });
-    //         return { ...sortedBoarData, [category]: sortedCardsWithinCategory };
-    //     }, {});
-
-    //     setBoardData(sortedBoard as any);
-    // };
+    const sortCardHandler = () => sortBoardData();
 
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton color='primary' onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
 
@@ -129,9 +119,9 @@ const Boards = ({
             <Navbar boardId={boardId} connectionStatus={connectionStatus} />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexDirection="row">
-                    {/* <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
+                    <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
                         <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
-                    </ButtonGroup> */}
+                    </ButtonGroup>
                 </Box>
                 <Box display="flex" flexGrow={1} flexDirection="row-reverse">
                     <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
@@ -153,7 +143,7 @@ const Boards = ({
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
                                 {(notes as any)[category].map((note: NoteType, index: number) => (
-                                    <Note id={`note${index}`} userId={userId} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler} />
+                                    <Note key={`note${index}`} id={`note${index}`} userId={userId} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler} />
                                 ))}
                             </Grid>
                         </Grid>
@@ -186,6 +176,7 @@ const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps =>
         setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
         socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId }),
         updateSafetyScore: (value: number) => dispatch({ type: ActionTypes.UPDATE_SAFETY_SCORE, value }),
+        sortBoardData: () => dispatch({type: ActionTypes.SORT_BOARD_DATA})
     }
 }
 
