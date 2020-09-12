@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { exportBoard } from '../../services/board.service'
+import { exportBoard } from '../../../../services/board.service'
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import './BoardInfo.scss'

@@ -1,5 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import React, { useState } from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { TState, TAction } from '../../store/interfaces';
+import * as ActionTypes from '../../store/actions';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl'
@@ -18,11 +22,22 @@ import './LandingPage.scss';
 import boardImage from '../../assets/board.svg';
 import { getUserIDStorageKey } from '../../common-utils';
 
+type TLandingPageDispatchProps = {
+    setUserId: Function,
+    setBoardId: Function
+}
 
-const LandingPage = () => {
+type TLandingPageStateProps = {
+    userId: string;
+    boardId: string;
+}
+
+type TLandingPageProps = TLandingPageDispatchProps & TLandingPageStateProps;
+
+
+const LandingPage = (props: TLandingPageProps) => {
     const browserHistory = useHistory();
 
-    const [boardId, setBoardId] = useState('');
     const [createBoardProgress, setCreateBoardProgress] = useState(false);
     const [createBoardSuccess, setCreateBoardSuccess] = useState(false);
     const [createBoardError, setCreateBoardError] = useState(false);
@@ -36,7 +51,7 @@ const LandingPage = () => {
         setCreateBoardSuccess(false);
         createBoard()
             .then(boardId => {
-                setBoardId(boardId);
+                props.setBoardId(boardId);
                 setCreateBoardSuccess(true);
             })
             .catch(error => {
@@ -53,15 +68,16 @@ const LandingPage = () => {
             userId = uuid();
             localStorage.setItem(USER_ID_KEY, userId);
         }
+        props.setUserId(userId);
         return userId;
     }
 
     const joinBoardHandler = () => {
-        if (!boardId) return setJoinBoardError({ errorField: 'boardId', message: 'Board id is required' });
+        if (!props.boardId) return setJoinBoardError({ errorField: 'boardId', message: 'Board id is required' });
 
         setJoinBoardProgress(true);
         setJoinBoardError({ errorField: '', message: '' });
-        joinBoard(boardId, getUserIdForBoard(boardId))
+        joinBoard(props.boardId, getUserIdForBoard(props.boardId))
             .then(boardJoiningResult => {
                 const { boardId } = boardJoiningResult;
                 browserHistory.push(`/boards/${boardId}`);
@@ -100,7 +116,7 @@ const LandingPage = () => {
                         </Typography>
                         <FormControl fullWidth>
                             <InputLabel htmlFor="boardId" variant="standard" margin="dense">Board ID</InputLabel>
-                            <Input id="boardId" fullWidth value={boardId} onChange={event => setBoardId(event.target.value)} disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'boardId'} />
+                            <Input id="boardId" fullWidth value={props.boardId} onChange={event => props.setBoardId(event.target.value)} disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'boardId'} />
                         </FormControl>
                         <Button variant="contained" color="primary" onClick={joinBoardHandler} disabled={createBoardProgress || joinBoardProgress} >Join Now</Button>
                         {joinBoardProgress && <LinearProgress />}
@@ -112,4 +128,18 @@ const LandingPage = () => {
     );
 }
 
-export default LandingPage;
+const mapStateToProps = (state: TState): TLandingPageStateProps => {
+    return {
+        boardId: state.boardId,
+        userId: state.userId
+    }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<TAction>): TLandingPageDispatchProps => {
+    return {
+        setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
+        setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);
