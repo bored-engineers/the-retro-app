@@ -6,7 +6,8 @@ const initialState: TState = {
     userId: '',
     boardData: { wentWell: [], notWell: [], actionItems: [], appreciations: [] },
     safetyScores: [],
-    connectionStatus: ConnectionStatus.DISCONNECTED
+    connectionStatus: ConnectionStatus.DISCONNECTED,
+    toastMessage: ''
 };
 
 const getCategoryMap: { [key: string]: string } = {
@@ -88,6 +89,12 @@ const reducer = (state = initialState, action: TAction): TState => {
             return {
                 ...state,
                 safetyScores: action.safetyScores
+            }
+
+        case actionTypes.ADD_TOAST_MESSAGE:
+            return {
+                ...state,
+                toastMessage: action.message
             }
         default: return state;
     }

@@ -8,7 +8,8 @@ export type TState = {
     userId: string;
     boardData: { wentWell: any[], notWell: any[], actionItems: any[], appreciations: any[] };
     safetyScores: number[]
-    connectionStatus: ConnectionStatus
+    connectionStatus: ConnectionStatus,
+    toastMessage: string
 };
 
 export type TAction = {

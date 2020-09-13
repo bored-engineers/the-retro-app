@@ -6,18 +6,11 @@ import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from 'react-router';
 import HomeLogo from '../../../assets/Logo.png';
 import BoardInfo from './board-info/BoardInfo';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 import './Navbar.scss';
-import { ConnectionStatus } from "../../../store/interfaces";
 
-type BoardInfoPropType = {
-    boardId: string;
-    connectionStatus: string;
-};
-const Navbar = ({ boardId, connectionStatus }: BoardInfoPropType) => {
+const Navbar = () => {
     const browserHistory = useHistory();
-    const getIconStyle = () => connectionStatus === ConnectionStatus.CONNECTED ? 'green': 'red';
     return (
         <div className='navbar'>
             <AppBar position="static">
@@ -26,9 +19,8 @@ const Navbar = ({ boardId, connectionStatus }: BoardInfoPropType) => {
                         <img alt="Home Logog" src={HomeLogo} />
                     </Avatar>
                     <Typography variant="h6" className='title'>The Retro App</Typography>
-                    <FiberManualRecordIcon style={{ color: getIconStyle() }} />
                     <div className='user-icon'>
-                        <BoardInfo boardId={boardId} />
+                        <BoardInfo/>
                     </div>
                 </Toolbar>
             </AppBar>

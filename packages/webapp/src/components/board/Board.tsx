@@ -116,7 +116,7 @@ const Boards = ({
 
     return (
         <div className="board">
-            <Navbar boardId={boardId} connectionStatus={connectionStatus} />
+            <Navbar />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexDirection="row">
                     <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
@@ -176,7 +176,7 @@ const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps =>
         setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
         socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId }),
         updateSafetyScore: (value: number) => dispatch({ type: ActionTypes.UPDATE_SAFETY_SCORE, value }),
-        sortBoardData: () => dispatch({type: ActionTypes.SORT_BOARD_DATA})
+        sortBoardData: () => dispatch({ type: ActionTypes.SORT_BOARD_DATA })
     }
 }
 

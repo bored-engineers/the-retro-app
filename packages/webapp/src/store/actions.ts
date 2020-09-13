@@ -5,6 +5,8 @@ export const INITIALIZE_BOARD_DATA = 'INITIALIZE_BOARD_DATA';
 export const SORT_BOARD_DATA = 'SORT_BOARD_DATA';
 export const NOTE_ADDED = 'NOTE_ADDED';
 export const NOTE_REMOVED = 'NOTE_REMOVED';
+export const ADD_TOAST_MESSAGE = 'ADD_TOAST_MESSAGE';
+
 
 
 /** Actions for Socket Events */
