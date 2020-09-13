@@ -2,7 +2,11 @@
     flex-grow: 1;
 }
 .board-content{
+    margin-bottom: 60px;
     margin-top: 1vh;
+    overflow-y: auto;
+    height: 100vh;
+    padding-bottom: 165px;
 }
 .category{
     padding: 0 1vw;
@@ -37,6 +41,7 @@
 
 }
 .toolbar-box{
+    margin-top: 65px;
     padding: 0.5%;
     border-bottom-color: rgb(194, 194, 194) !important;
 }
