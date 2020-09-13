@@ -24,8 +24,8 @@ const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || '';
 
 export const socketMiddleware = () => {
     let socket: SocketIOClient.Socket;
-    const onConnectionSuccess = (store: any) => () => { store.dispatch({ type: ActionType.SOCKET_CONNECTED }) };
-    const onDisconnection = (store: any) => () => { store.dispatch({ type: ActionType.SOCKET_DISCONNECTED }) };
+    const onConnectionSuccess = (store: any) => () => { store.dispatch({ type: ActionType.SOCKET_CONNECTED }); };
+    const onDisconnection = (store: any) => () => { store.dispatch({ type: ActionType.SOCKET_DISCONNECTED }); };
     const customEventHandlers: TCustomEventHandlers = {
         [SocketListnerEvents.INITIALIZE]: (store: any) => (data: any) => {
             console.log(data);
