@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { TState, TAction } from '../../store/interfaces';
@@ -15,7 +15,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router';
 
 import { createBoard, joinBoard } from '../../services/board.service';
 import './LandingPage.scss';
@@ -36,7 +36,9 @@ type TLandingPageProps = TLandingPageDispatchProps & TLandingPageStateProps;
 
 
 const LandingPage = (props: TLandingPageProps) => {
+    const {setUserId, setBoardId, boardId} = props;
     const browserHistory = useHistory();
+    const location = useLocation();
 
     const [createBoardProgress, setCreateBoardProgress] = useState(false);
     const [createBoardSuccess, setCreateBoardSuccess] = useState(false);
@@ -51,7 +53,7 @@ const LandingPage = (props: TLandingPageProps) => {
         setCreateBoardSuccess(false);
         createBoard()
             .then(boardId => {
-                props.setBoardId(boardId);
+                browserHistory.push(`/?boardId=${boardId}`);
                 setCreateBoardSuccess(true);
             })
             .catch(error => {
@@ -61,23 +63,29 @@ const LandingPage = (props: TLandingPageProps) => {
             });
     };
 
-    const getUserIdForBoard = (boardId: string) => {
+    const getUserIdFromLocalStorage = () => {
         const USER_ID_KEY = getUserIDStorageKey(boardId);
-        let userId = localStorage.getItem(USER_ID_KEY);
-        if (!userId) {
-            userId = uuid();
-            localStorage.setItem(USER_ID_KEY, userId);
+        const userIdInLocalStorage = localStorage.getItem(USER_ID_KEY);
+        if (!userIdInLocalStorage) {
+            const newUserId = uuid();
+            localStorage.setItem(USER_ID_KEY, newUserId);
+            return newUserId;
         }
-        props.setUserId(userId);
-        return userId;
+        return userIdInLocalStorage;
+    }
+
+    const getUserIdForBoard = (): string => {
+        const userIdFromLocalStorage = getUserIdFromLocalStorage();
+        setUserId(userIdFromLocalStorage);
+        return userIdFromLocalStorage;
     }
 
     const joinBoardHandler = () => {
-        if (!props.boardId) return setJoinBoardError({ errorField: 'boardId', message: 'Board id is required' });
+        if (!boardId) return setJoinBoardError({ errorField: 'boardId', message: 'Board id is required' });
 
         setJoinBoardProgress(true);
         setJoinBoardError({ errorField: '', message: '' });
-        joinBoard(props.boardId, getUserIdForBoard(props.boardId))
+        joinBoard(boardId, getUserIdForBoard())
             .then(boardJoiningResult => {
                 const { boardId } = boardJoiningResult;
                 browserHistory.push(`/boards/${boardId}`);
@@ -89,6 +97,24 @@ const LandingPage = (props: TLandingPageProps) => {
                 setJoinBoardProgress(false);
             });
     }
+
+    const onCopyHandler = async (event: any) => {
+        event.stopPropagation();
+        const boardSharableLink = `${window.location.origin}/#/?boardId=${boardId}`;
+        navigator.clipboard.writeText(boardSharableLink);
+    };
+
+    const getSuccessElements = () => {
+        return <>
+            <FormHelperText>Your board created successfully. You can join now...</FormHelperText>
+            <Button variant="contained" disabled={!createBoardSuccess} color="secondary" onClick={onCopyHandler}>Copy Sharable Link</Button>
+        </>;
+    };
+
+    useEffect(() => {
+        const boardId = new URLSearchParams(location.search).get('boardId');
+        if (boardId) setBoardId(boardId);
+    }, [location.search, setBoardId]);
 
     return (
         <React.Fragment>
@@ -107,7 +133,7 @@ const LandingPage = (props: TLandingPageProps) => {
                         <Button variant="contained" color="primary" onClick={createBoardHandler} disabled={createBoardProgress} >Create a New Board</Button>
                         {createBoardProgress && <LinearProgress />}
                         {createBoardError && <FormHelperText error>There is some problem creating board. Try Again Later...</FormHelperText>}
-                        {createBoardSuccess && <FormHelperText>Your board created successfully. You can join now...</FormHelperText>}
+                        {createBoardSuccess && getSuccessElements()}
                     </div>
                     <Divider variant="middle" flexItem />
                     <div className="join-board">
@@ -116,7 +142,7 @@ const LandingPage = (props: TLandingPageProps) => {
                         </Typography>
                         <FormControl fullWidth>
                             <InputLabel htmlFor="boardId" variant="standard" margin="dense">Board ID</InputLabel>
-                            <Input id="boardId" fullWidth value={props.boardId} onChange={event => props.setBoardId(event.target.value)} disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'boardId'} />
+                            <Input id="boardId" fullWidth value={boardId} onChange={event => setBoardId(event.target.value)} disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'boardId'} />
                         </FormControl>
                         <Button variant="contained" color="primary" onClick={joinBoardHandler} disabled={createBoardProgress || joinBoardProgress} >Join Now</Button>
                         {joinBoardProgress && <LinearProgress />}

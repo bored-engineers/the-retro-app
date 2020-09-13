@@ -23,14 +23,16 @@ const BoardInfo = ({ boardId }: BoardInfoPropType) => {
     const onClickBoardInfoHeading = async (event: any) => {
         setAnchorEl(event.currentTarget);
     };
+    
     const onBoardCopyCLick = async (event: any) => {
         setAnchorEl(null);
-        event.stopPropagation()
-        navigator.clipboard.writeText(boardId);
+        event.stopPropagation();
+        const boardSharableLink = `${window.location.origin}/#/?boardId=${boardId}`;
+        navigator.clipboard.writeText(boardSharableLink);
         setOpenTooltip(true);
         await new Promise(r => setTimeout(r, 2000));
         setOpenTooltip(false);
-      };
+    };
 
     const onExportBoard = (event: any) => {
         setAnchorEl(null);
@@ -42,8 +44,8 @@ const BoardInfo = ({ boardId }: BoardInfoPropType) => {
         browserHistory.push(`/survey`);
     };
     const handleClose = () => {
-       setAnchorEl(null);
-      };
+        setAnchorEl(null);
+    };
 
     return (
         <div className='board-info'>
@@ -61,7 +63,7 @@ const BoardInfo = ({ boardId }: BoardInfoPropType) => {
                 <span className="board-info">
                     <Tooltip title={`Board ID: ${boardId}`} aria-label="copy" placement="top-start">
                         <ButtonGroup size="small" aria-label="small outlined button group">
-                            <Button className="board-button-group" variant="outlined" onMouseOver={onClickBoardInfoHeading}>{`Board : ${boardId}`}</Button>
+                            <Button className="board-button-group" variant="outlined" onClick={onClickBoardInfoHeading}>{`Board : ${boardId}`}</Button>
                         </ButtonGroup>
                     </Tooltip>
                     <Menu
@@ -74,9 +76,20 @@ const BoardInfo = ({ boardId }: BoardInfoPropType) => {
                             vertical: 'bottom',
                             horizontal: 'center',
                         }}
+                        getContentAnchorEl={null}
                     >
-                        <MenuItem className="board-menu" onClick={onBoardCopyCLick}><FileCopyRoundedIcon className="menuitem-icon" /><Typography className="menuitem-text" variant="button">COPY BOARD ID</Typography></MenuItem>
-                        <MenuItem className="board-menu" onClick={onExportBoard}><PictureAsPdfRoundedIcon className="menuitem-icon" /><Typography className="menuitem-text" variant="button">EXPORT BOARD AS PDF</Typography></MenuItem>
+                        <MenuItem className="board-menu" onClick={onBoardCopyCLick}>
+                            <FileCopyRoundedIcon className="menuitem-icon" />
+                            <Typography className="menuitem-text" variant="button">
+                                COPY SHARABLE LINK
+                                </Typography>
+                        </MenuItem>
+                        <MenuItem className="board-menu" onClick={onExportBoard}>
+                            <PictureAsPdfRoundedIcon className="menuitem-icon" />
+                            <Typography className="menuitem-text" variant="button">
+                                EXPORT BOARD AS PDF
+                                </Typography>
+                        </MenuItem>
                     </Menu>
                 </span>
             </Tooltip>
