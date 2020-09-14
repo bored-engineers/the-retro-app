@@ -69,9 +69,8 @@ const BoardInfo = ({ boardId, connectionStatus, addToastMessage }: TBoardInfoPro
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                     transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 >
-                    <MenuItem dense onClick={onExportBoard}><ListItemIcon>{getConnectionStatusIcon()}</ListItemIcon> <ListItemText className='list-item-text' primary={getConnectionText()} /></MenuItem>
+                    <MenuItem dense><ListItemIcon>{getConnectionStatusIcon()}</ListItemIcon> <ListItemText className='list-item-text' primary={getConnectionText()} /></MenuItem>
                     <Divider light />
-
                     <MenuItem dense onClick={onBoardCopyCLick}><ListItemIcon><FileCopyRoundedIcon className="menuitem-icon" /></ListItemIcon> <ListItemText className='list-item-text' primary="Copy Board Link" /></MenuItem>
                     <MenuItem dense onClick={onExportBoard}><ListItemIcon><PictureAsPdfRoundedIcon className="menuitem-icon" /></ListItemIcon> <ListItemText className='list-item-text' primary="Export Board" /></MenuItem>
                 </Menu>
