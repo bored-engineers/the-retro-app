@@ -13,7 +13,7 @@ const Navbar = () => {
     const browserHistory = useHistory();
     return (
         <div className='navbar'>
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Toolbar className="toolbar">
                     <Avatar variant="rounded" src="Logo.png" className="navbar-logo" onClick={() => { browserHistory.push('/') }}>
                         <img alt="Home Logog" src={HomeLogo} />

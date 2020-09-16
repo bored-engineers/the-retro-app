@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import { exportBoard } from '../../../../services/board.service'
 import Button from '@material-ui/core/Button';
 import { ButtonGroup, Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@material-ui/core';
-import { useHistory } from 'react-router'
 import PictureAsPdfRoundedIcon from '@material-ui/icons/PictureAsPdfRounded';
 import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
-import FeedbackRoundedIcon from '@material-ui/icons/FeedbackRounded';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -28,7 +26,6 @@ type TBoardInfoDispatchProps = {
 type TBoardInfoProps = TBoardInfoStateProps & TBoardInfoDispatchProps;
 
 const BoardInfo = ({ boardId, connectionStatus, addToastMessage }: TBoardInfoProps) => {
-    const browserHistory = useHistory();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const onClickBoardInfoHeading = async (event: any) => {
@@ -48,10 +45,6 @@ const BoardInfo = ({ boardId, connectionStatus, addToastMessage }: TBoardInfoPro
         exportBoard(boardId);
     };
 
-    const onFeedBack = (event: any) => {
-        setAnchorEl(null);
-        browserHistory.push(`/survey`);
-    };
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -76,14 +69,12 @@ const BoardInfo = ({ boardId, connectionStatus, addToastMessage }: TBoardInfoPro
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                     transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 >
-                    <MenuItem dense onClick={onExportBoard}><ListItemIcon>{getConnectionStatusIcon()}</ListItemIcon> <ListItemText className='list-item-text' primary={getConnectionText()} /></MenuItem>
+                    <MenuItem dense><ListItemIcon>{getConnectionStatusIcon()}</ListItemIcon> <ListItemText className='list-item-text' primary={getConnectionText()} /></MenuItem>
                     <Divider light />
-
                     <MenuItem dense onClick={onBoardCopyCLick}><ListItemIcon><FileCopyRoundedIcon className="menuitem-icon" /></ListItemIcon> <ListItemText className='list-item-text' primary="Copy Board Link" /></MenuItem>
                     <MenuItem dense onClick={onExportBoard}><ListItemIcon><PictureAsPdfRoundedIcon className="menuitem-icon" /></ListItemIcon> <ListItemText className='list-item-text' primary="Export Board" /></MenuItem>
                 </Menu>
             </span>
-            <Button onClick={onFeedBack}><FeedbackRoundedIcon className="feedback-button" /></Button>
         </div>
     );
 }

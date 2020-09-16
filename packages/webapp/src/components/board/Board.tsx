@@ -20,6 +20,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './Board.scss';
 import { getUserIDStorageKey } from '../../common-utils';
+import Footer from '../common/footer/Footer';
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
 type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus, notes: any }
@@ -150,6 +151,7 @@ const Boards = ({
                     ))}
                 </Grid>
             </div>
+            <Footer />
             <NoteForm noteForm={noteForm} setNoteForm={setNoteForm} />
             <SafetyCheck safetyCheck={safetyCheck} setSafetyCheck={setSafetyCheck} safetyScoreSubmitHandle={safetyScoreSubmitHandler} />
         </div>
