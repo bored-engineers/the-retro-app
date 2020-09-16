@@ -74,9 +74,9 @@ const Boards = ({
     const ADD_ICON_BUTTON = (categoryId: string) => <span className="add-button"><IconButton color='primary' onClick={(event) => { event.preventDefault(); setNoteForm({ open: true, createNoteHandler: createNoteHandler, data: { category: categoryId, categoryTitle: CATEGORIES_TITLE_MAP.get(categoryId) } }); }}><AddIcon /></IconButton></span>;
 
     const CATEGORIES_ICON_MAP = new Map<string, object>()
-        .set('wentWell', <span id="wentWellColumn" className='category-title'><GoodMoodIcon className='heading-well-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('went-well')}</span>)
-        .set('notWell', <span id="notWellColumn" className='category-title'><BadMoodIcon color='error' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('not-well')}</span>)
-        .set('actionItems', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('action-items')}</span>)
+        .set('wentWell', <span id="wentWellColumn" className='category-title'><GoodMoodIcon className='heading-well-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What went well</Typography>{ADD_ICON_BUTTON('wentWell')}</span>)
+        .set('notWell', <span id="notWellColumn" className='category-title'><BadMoodIcon color='error' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >What didn't go well</Typography>{ADD_ICON_BUTTON('notWell')}</span>)
+        .set('actionItems', <span id="actionItemsColumn" className='category-title'><ActionItemIcon className='heading-action-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Action items</Typography>{ADD_ICON_BUTTON('actionItems')}</span>)
         .set('appreciations', <span id="appreciationsColumn" className='category-title'><AppreciationIcon className='heading-appreciation-icon' /><Typography color="textSecondary" variant='subtitle1' className='category-title-text' >Appreciations</Typography>{ADD_ICON_BUTTON('appreciations')}</span>);
 
     const getUserIdForBoard = (boardId: string) => {
