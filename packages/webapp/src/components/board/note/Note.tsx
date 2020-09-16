@@ -30,21 +30,19 @@ const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler,
       <Box boxShadow={5} className="card-box">
         <Card variant="outlined" >
           <CardContent>
-            <Typography variant="body2" component="p" className='note-content-text'>
-              {note.text}
-            </Typography>
+            <div dangerouslySetInnerHTML={{ __html: note.text }} />
           </CardContent>
           <Divider variant="middle" />
           <div className="card-actions">
-          <Tooltip title={hasVoted() ? 'DOWN VOTE' : 'UP VOTE'}>
-            <Button size="small" onClick={voteHandler}>
-              <Badge badgeContent={note.votes.length} color="secondary" >
-                {hasVoted() ? <ThumbUp color='primary' /> : <ThumbUpOutlinedIcon />}
-              </Badge>
-            </Button>
-          </Tooltip>
-          <Button size="small" color='primary' className='edit-button' onClick={editNoteHandler}><EditRoundedIcon/></Button>
-          <Button size="small" color='primary' className='edit-button' onClick={deleteClickHandler}><DeleteRoundedIcon/></Button>
+            <Tooltip title={hasVoted() ? 'DOWN VOTE' : 'UP VOTE'}>
+              <Button size="small" onClick={voteHandler}>
+                <Badge badgeContent={note.votes.length} color="secondary" >
+                  {hasVoted() ? <ThumbUp color='primary' /> : <ThumbUpOutlinedIcon />}
+                </Badge>
+              </Button>
+            </Tooltip>
+            <Button size="small" color='primary' className='edit-button' onClick={editNoteHandler}><EditRoundedIcon /></Button>
+            <Button size="small" color='primary' className='edit-button' onClick={deleteClickHandler}><DeleteRoundedIcon /></Button>
           </div>
         </Card>
       </Box>
