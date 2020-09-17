@@ -24,8 +24,14 @@ const NoteForm = ({ noteForm, setNoteForm }: { noteForm: any, setNoteForm: any }
 
     const textAreaChangeHandle = (event: any) => setTextAreaValue(event.target.value);
 
+    const CATEGORIES_ID_MAP = new Map<string, string>()
+        .set('wentWell', 'went-well')
+        .set('notWell', 'not-well')
+        .set('actionItems', 'action-items')
+        .set('appreciations', 'appreciations');
+
     const addHandler = (event: any) => {
-        const categoryId = noteForm.data.category;
+        const categoryId = CATEGORIES_ID_MAP.get(noteForm.data.category);
         const text = textAreaValue;
         noteForm.createNoteHandler(categoryId, text);
         setTextAreaValue('');
