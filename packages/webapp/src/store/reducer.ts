@@ -7,7 +7,8 @@ const initialState: TState = {
     boardData: { wentWell: [], notWell: [], actionItems: [], appreciations: [] },
     safetyScores: [],
     connectionStatus: ConnectionStatus.DISCONNECTED,
-    toastMessage: ''
+    toastMessage: '',
+    presenting: false
 };
 
 const getCategoryMap: { [key: string]: string } = {
@@ -18,8 +19,6 @@ const getCategoryMap: { [key: string]: string } = {
 };
 
 const reducer = (state = initialState, action: TAction): TState => {
-    console.log(action);
-
     switch (action.type) {
         case actionTypes.SET_BOARDID:
             return {
@@ -90,11 +89,20 @@ const reducer = (state = initialState, action: TAction): TState => {
                 ...state,
                 safetyScores: action.safetyScores
             }
-
         case actionTypes.ADD_TOAST_MESSAGE:
             return {
                 ...state,
                 toastMessage: action.message
+            }
+        case actionTypes.START_PRESENTING:
+            return {
+                ...state,
+                presenting: true
+            }
+        case actionTypes.STOP_PRESENTING:
+            return {
+                ...state,
+                presenting: false
             }
         default: return state;
     }
