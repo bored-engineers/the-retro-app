@@ -37,7 +37,7 @@ const SafetyCheck = ({ safetyCheck, setSafetyCheck, safetyScoreSubmitHandle }: {
     const body = (
         <div style={modalStyle} className='modal-body'>
             <h2 className="note-form-category">Safety Check</h2>
-            <p>How much are you comfortable for this retro ?</p>
+            <p>How comfortable are you for this retro?</p>
             <Slider className='safety-slider' onChange={handleSliderChange} defaultValue={1} min={1} max={5} step={1} marks={marks} getAriaValueText={valuetext} aria-labelledby="discrete-slider" />
             <Button className='submit-button' color="primary" disabled={safetyValue===-1} onClick={submitHandler}>Submit</Button>
         </div>
