@@ -12,22 +12,17 @@ import './Note.scss';
 
 const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteHandler, presenting }: any) => {
   const editNoteHandler = () => {
-    if (!presenting) {
-      setNoteForm({ open: true, updateNoteHandler: updateNoteHandler, data: note, state: 'update' });
-    }
+    setNoteForm({ open: true, updateNoteHandler: updateNoteHandler, data: note, state: 'update' });
   }
 
   const deleteClickHandler = () => {
-    if (!presenting) {
-      deleteHandler(note.cardId);
-    }
+    deleteHandler(note.cardId);
   }
 
   const voteHandler = () => {
     if (!presenting) {
       updateVoteHandler(note);
     }
-
   }
 
   const hasVoted = () => note.votes.includes(userId)
@@ -37,20 +32,6 @@ const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler,
       return 'Exit Presentation Mode to Vote';
     }
     return hasVoted() ? 'DOWN VOTE' : 'UP VOTE';
-  }
-
-  const getDeleteIconTitle = () => {
-    if (presenting) {
-      return 'Exit Presentation Mode to Delete';
-    }
-    return 'Delete this Note';
-  }
-
-  const getEditIconTitle = () => {
-    if (presenting) {
-      return 'Exit Presentation Mode to Edit';
-    }
-    return 'Edit this Note';
   }
 
   return (
@@ -72,10 +53,10 @@ const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler,
                 </Badge>
               </Button>
             </Tooltip>
-            <Tooltip title={getEditIconTitle()}>
+            <Tooltip title={'Edit this Note'}>
               <Button size="small" color='primary' className='edit-button' onClick={editNoteHandler}><EditRoundedIcon /></Button>
             </Tooltip>
-            <Tooltip title={getDeleteIconTitle()}>
+            <Tooltip title={'Delete this Note'}>
               <Button size="small" color='primary' className='edit-button' onClick={deleteClickHandler}><DeleteRoundedIcon /></Button>
             </Tooltip>
           </div>

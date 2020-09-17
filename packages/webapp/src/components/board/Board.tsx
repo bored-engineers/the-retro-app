@@ -104,7 +104,7 @@ const Boards = ({
     }
 
     const getBoardIdFromUrl = (url: string) => {
-        const { boardId } = url.match(/(\/boards\/(?<boardId>[\w\d-]*))/) ?.groups || { boardId: '' };
+        const { boardId } = url.match(/(\/boards\/(?<boardId>[\w\d-]*))/)?.groups || { boardId: '' };
         if (Boolean(boardId)) return boardId;
         else throw new Error('Invalid board id');
     }
@@ -147,18 +147,13 @@ const Boards = ({
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexGrow={1} flexDirection="row">
                     <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
-
                     <Typography className='safety-score-info'></Typography>
-
                     <Popper id={id} open={open} anchorEl={anchorEl}>
                         <ClickAwayListener onClickAway={onSafetyCheckClickAway}>
                             <Paper variant='elevation' elevation={3} className='safety-graph'><SafetyChart data={safetyScores} /></ Paper>
                         </ClickAwayListener>
                     </Popper>
                 </Box>
-                {/* <Box display="flex">
-                    
-                </Box> */}
                 <Box display="flex" flexDirection="row-reverse">
                     <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
                         <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
