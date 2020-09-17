@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Grid, Typography, Button, Box, ButtonGroup, Popper, Paper, ClickAwayListener } from '@material-ui/core';
+import { Grid, Typography, Button, Box, ButtonGroup, Popper, Paper, ClickAwayListener, Tooltip } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
 import BadMoodIcon from '@material-ui/icons/MoodBad';
@@ -17,22 +17,40 @@ import IconButton from '@material-ui/core/IconButton';
 import SafetyCheck from './safety-check/SafetyCheck';
 import SafetyChart from './safety-chart/SafetyChart';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import PresentToAllIcon from '@material-ui/icons/PresentToAll';
+import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 
 import './Board.scss';
 import { getUserIDStorageKey } from '../../common-utils';
 import Footer from '../common/footer/Footer';
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
-type TBoardStateProps = { userId: string; boardId: string; safetyScores: number[], connectionStatus: ConnectionStatus, notes: any }
+type TBoardStateProps = {
+    userId: string,
+    boardId: string,
+    safetyScores: number[],
+    connectionStatus: ConnectionStatus,
+    notes: any,
+    presenting: boolean
+}
 type TBoardDispatchProps = {
-    setBoardId: Function, setUserId: Function, socketConnect: Function, createNote: Function, updateSafetyScore: Function,
-    removeNote: Function, updateVote: Function, updateNote: Function, sortBoardData: Function
+    setBoardId: Function,
+    setUserId: Function,
+    socketConnect: Function,
+    createNote: Function,
+    updateSafetyScore: Function,
+    removeNote: Function,
+    updateVote: Function,
+    updateNote: Function,
+    sortBoardData: Function,
+    startPresenting: Function,
+    stopPresenting: Function,
 };
 type TBoardProps = TBoardStateProps & TBoardDispatchProps & { location: Location };
 
 const Boards = ({
     userId, boardId, safetyScores, setBoardId, setUserId, location, socketConnect, connectionStatus, notes, createNote,
-    updateSafetyScore, removeNote, updateVote, updateNote, sortBoardData
+    updateSafetyScore, removeNote, updateVote, updateNote, sortBoardData, presenting, startPresenting, stopPresenting
 }: TBoardProps) => {
 
     const [noteForm, setNoteForm] = useState({ open: false, data: {}, createNoteHandler: {} });
@@ -91,6 +109,14 @@ const Boards = ({
         else throw new Error('Invalid board id');
     }
 
+    const stopPresentingHandler = () => {
+        stopPresenting();
+    }
+
+    const startPresentingHandler = () => {
+        startPresenting();
+    }
+
     useEffect(() => {
         setIsSafe(safetyScores.every(score => score > 2));
     }, [safetyScores]);
@@ -119,21 +145,25 @@ const Boards = ({
         <div className="board">
             <Navbar />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
-                <Box display="flex" flexDirection="row">
-                    <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
-                        <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
-                    </ButtonGroup>
-                </Box>
-                <Box display="flex" flexGrow={1} flexDirection="row-reverse">
+                <Box display="flex" flexGrow={1} flexDirection="row">
                     <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
-
                     <Typography className='safety-score-info'></Typography>
-
                     <Popper id={id} open={open} anchorEl={anchorEl}>
                         <ClickAwayListener onClickAway={onSafetyCheckClickAway}>
                             <Paper variant='elevation' elevation={3} className='safety-graph'><SafetyChart data={safetyScores} /></ Paper>
                         </ClickAwayListener>
                     </Popper>
+                </Box>
+                <Box display="flex" flexDirection="row-reverse">
+                    <ButtonGroup color="primary" variant="contained" size="small" aria-label="small outlined button group">
+                        <Button onClick={sortCardHandler}>SORT BY VOTES</Button>
+                    </ButtonGroup>
+                    <Tooltip title={presenting? 'Exit Presentation Mode': 'Enter Presentation Mode'}>
+                        <ButtonGroup variant="contained" size="small" aria-label="small outlined button group" className='presentation-button-group'>
+                            {!presenting && <Button color='primary' onClick={startPresentingHandler}><PresentToAllIcon /></Button>}
+                            {presenting && <Button style={{ backgroundColor: 'black' }} onClick={stopPresentingHandler}><CancelPresentationIcon htmlColor='white' /></Button>}
+                        </ButtonGroup>
+                    </Tooltip>
                 </Box>
             </Box>
             <div className="board-content">
@@ -144,7 +174,17 @@ const Boards = ({
                             <Divider variant="middle" />
                             <Grid id={`categoryColumnContentGrid${index}`} container direction="column" justify="space-evenly" alignItems="center" className="category">
                                 {(notes as any)[category].map((note: NoteType, index: number) => (
-                                    <Note key={`note${index}`} id={`note${index}`} userId={userId} note={note} setNoteForm={setNoteForm} updateNoteHandler={updateNoteHandler} updateVoteHandler={updateVoteHandler} deleteHandler={deleteHandler} />
+                                    <Note
+                                        key={`note${index}`}
+                                        id={`note${index}`}
+                                        userId={userId}
+                                        note={note}
+                                        setNoteForm={setNoteForm}
+                                        updateNoteHandler={updateNoteHandler}
+                                        updateVoteHandler={updateVoteHandler}
+                                        deleteHandler={deleteHandler}
+                                        presenting={presenting}
+                                    />
                                 ))}
                             </Grid>
                         </Grid>
@@ -164,7 +204,8 @@ const mapStateToProps = (state: TState): TBoardStateProps => {
         userId: state.userId,
         safetyScores: state.safetyScores,
         connectionStatus: state.connectionStatus,
-        notes: state.boardData
+        notes: state.boardData,
+        presenting: state.presenting,
     }
 }
 
@@ -178,7 +219,9 @@ const mapDispatchToProps = (dispatch: Dispatch<TAction>): TBoardDispatchProps =>
         setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
         socketConnect: (userId: string, boardId: string) => dispatch({ type: ActionTypes.SOCKET_CONNECT, userId, boardId }),
         updateSafetyScore: (value: number) => dispatch({ type: ActionTypes.UPDATE_SAFETY_SCORE, value }),
-        sortBoardData: () => dispatch({ type: ActionTypes.SORT_BOARD_DATA })
+        sortBoardData: () => dispatch({ type: ActionTypes.SORT_BOARD_DATA }),
+        startPresenting: () => dispatch({ type: ActionTypes.START_PRESENTING }),
+        stopPresenting: () => dispatch({ type: ActionTypes.STOP_PRESENTING })
     }
 }
 

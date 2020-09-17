@@ -10,7 +10,7 @@ import EditRoundedIcon from '@material-ui/icons/EditRounded';
 
 import './Note.scss';
 
-const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteHandler }: any) => {
+const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler, deleteHandler, presenting }: any) => {
   const editNoteHandler = () => {
     setNoteForm({ open: true, updateNoteHandler: updateNoteHandler, data: note, state: 'update' });
   }
@@ -20,10 +20,19 @@ const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler,
   }
 
   const voteHandler = () => {
-    updateVoteHandler(note);
+    if (!presenting) {
+      updateVoteHandler(note);
+    }
   }
 
   const hasVoted = () => note.votes.includes(userId)
+
+  const getVoteIconTitle = () => {
+    if (presenting) {
+      return 'Exit Presentation Mode to Vote';
+    }
+    return hasVoted() ? 'DOWN VOTE' : 'UP VOTE';
+  }
 
   return (
     <div className="note">
@@ -36,15 +45,20 @@ const Note = ({ userId, note, setNoteForm, updateNoteHandler, updateVoteHandler,
           </CardContent>
           <Divider variant="middle" />
           <div className="card-actions">
-          <Tooltip title={hasVoted() ? 'DOWN VOTE' : 'UP VOTE'}>
-            <Button size="small" onClick={voteHandler}>
-              <Badge badgeContent={note.votes.length} color="secondary" >
-                {hasVoted() ? <ThumbUp color='primary' /> : <ThumbUpOutlinedIcon />}
-              </Badge>
-            </Button>
-          </Tooltip>
-          <Button size="small" color='primary' className='edit-button' onClick={editNoteHandler}><EditRoundedIcon/></Button>
-          <Button size="small" color='primary' className='edit-button' onClick={deleteClickHandler}><DeleteRoundedIcon/></Button>
+            <Tooltip title={getVoteIconTitle()}>
+              <Button size="small" onClick={voteHandler}>
+                <Badge badgeContent={note.votes.length} color="secondary" >
+                  {presenting && <ThumbUp color='inherit' />}
+                  {!presenting && (hasVoted() ? <ThumbUp color='primary' /> : <ThumbUpOutlinedIcon />)}
+                </Badge>
+              </Button>
+            </Tooltip>
+            <Tooltip title={'Edit this Note'}>
+              <Button size="small" color='primary' className='edit-button' onClick={editNoteHandler}><EditRoundedIcon /></Button>
+            </Tooltip>
+            <Tooltip title={'Delete this Note'}>
+              <Button size="small" color='primary' className='edit-button' onClick={deleteClickHandler}><DeleteRoundedIcon /></Button>
+            </Tooltip>
           </div>
         </Card>
       </Box>

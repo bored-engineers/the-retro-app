@@ -9,7 +9,8 @@ export type TState = {
     boardData: { wentWell: any[], notWell: any[], actionItems: any[], appreciations: any[] };
     safetyScores: number[]
     connectionStatus: ConnectionStatus,
-    toastMessage: string
+    toastMessage: string,
+    presenting: boolean
 };
 
 export type TAction = {
