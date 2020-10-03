@@ -11,8 +11,18 @@
 .vote-button{
     padding-top: 0% !important;
 }
+
 .card-box{
-    border-radius: 5%;
+    box-sizing: border-box;
+    border: 1px solid white;
+}
+
+.card-box-focused{
+    outline: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #2188ff!important;
+    box-shadow: 0 0 0 .2em rgba(4,105,214,.2) !important;
 }
 .card-actions{
     margin-bottom: 5px !important;
