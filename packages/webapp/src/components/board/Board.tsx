@@ -146,7 +146,7 @@ const Boards = ({
             <Navbar />
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexGrow={1} flexDirection="row">
-                    <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'False'} <InfoOutlinedIcon className='safety-result-info' /></Button>
+                    <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'Unsafe'} <InfoOutlinedIcon className='safety-result-info' /></Button>
                     <Typography className='safety-score-info'></Typography>
                     <Popper id={id} open={open} anchorEl={anchorEl}>
                         <ClickAwayListener onClickAway={onSafetyCheckClickAway}>
