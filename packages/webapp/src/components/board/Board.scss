@@ -54,15 +54,17 @@
     margin-left: 0.5vw;
 }
 .safety-graph{
-    padding-top:2vh;
-    margin-top: 1vh;
+    padding-top:1vh;
+    margin-top: .5vh;
 }
 .safety-success{
+    width: 220px;
     float: left !important;
     border-color: rgb(69, 199, 80) !important;
     color: rgb(69, 199, 80) !important;
 }
 .safety-failure{
+    width: 220px;
     float: left !important;
     border-color: rgb(209, 73, 73) !important;
     color: rgb(209, 73, 73) !important;
