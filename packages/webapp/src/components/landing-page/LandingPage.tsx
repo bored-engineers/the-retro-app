@@ -21,6 +21,7 @@ import { createBoard, joinBoard } from '../../services/board.service';
 import './LandingPage.scss';
 import boardImage from '../../assets/board.svg';
 import { getUserIDStorageKey } from '../../common-utils';
+import { Box, Link } from '@material-ui/core';
 
 type TLandingPageDispatchProps = {
     setUserId: Function,
@@ -116,6 +117,16 @@ const LandingPage = (props: TLandingPageProps) => {
         if (boardId) setBoardId(boardId);
     }, [location.search, setBoardId]);
 
+    function Branding() {
+        return (
+            <Typography variant="body2" color="textSecondary" align="center">
+            {'From the minds of '}
+            <Link color="primary" href="https://github.com/orgs/bored-engineers/people" target="_black">
+           <b>Bored Engineers</b>
+            </Link>{' '}
+          </Typography>
+        );
+      }
     return (
         <React.Fragment>
             <Grid container direction="column" justify="center" alignItems="center" className="landingPage">
@@ -148,6 +159,9 @@ const LandingPage = (props: TLandingPageProps) => {
                         {joinBoardProgress && <LinearProgress />}
                         {joinBoardError && <FormHelperText error>{joinBoardError.message}</FormHelperText>}
                     </div>
+                    <Box mt={2} className="footer">
+                        <Branding />
+                    </Box>
                 </Card>
             </Grid>
         </React.Fragment>
