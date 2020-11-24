@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2017",
+        "noImplicitAny": false,
+        "moduleResolution": "Node",
+        "sourceMap": false,
+        "removeComments": true,
+        "lib": ["es2015", "es2017", "dom"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowJs": true,
+        "types": [
+            "chai",
+            "mocha",
+            "node",
+            "taiko"
+        ],
+        "jsx": "react",
+        "strict": true,
+        "preserveConstEnums": true
+    },
+    "include": [
+        "src/tests/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "typings/**",
+        "src/**/*.spec.ts"
+    ]
+}
