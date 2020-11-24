@@ -1,25 +1,37 @@
 ![Test & Build](https://github.com/bored-engineers/the-retro-app/workflows/Push%20to%20master/badge.svg)
-<div align="center"> 
-<h1>Our own Retrospective tool</h1>
-<a href="http://www.theretroapp.com/">
-<img alt="Retro App" width="250" height="250" src="https://github.com/bored-engineers/the-retro-app/blob/master/docs/Logo.png"> </a>
-</div>
 
-## Who are we:
-Just bunch of bored engineers.
+# The Retro App
+> tldr version: *The Retro App is an application that can help you in conducting your Team's Retrospective Meetings.*
 
-## Tools
+Long Version: The Retro App is an open source applicaiton developed by a bunch on enthusiatic developers ([Bored Engineers](https://github.com/orgs/bored-engineers/people)) in order to provide a solution to online Retrospective Meetings. To use this application you can navigate to <https://theretroapp.com>
 
-We use these awesome tools.
+This guide will help you deploying your own instance of The Retro App.
 
-<div>
-  <a href="https://reactjs.org/">
-    <img alt="reactjs.org/" width="128" heigth="128" vspace="20" hspace="20" src="./docs/ReactLogo.png">
-  </a>
-  <a href="https://material-ui.com/">
-    <img alt="material-ui.com" width="128" heigth="128" vspace="20" hspace="20" src="https://material-ui.com/static/logo_raw.svg">
-  </a>
-  <a href="https://lerna.js.org/">
-    <img alt="erna.js.org/" width="128" heigth="128" vspace="20" hspace="20" src="https://lerna.js.org/images/lerna-hero.svg">
-  </a>
-</div>
+## Table of Contents
+* [Overview](#overview)
+* [Installation](#installation)
+* [Maintainers](#maintainer)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+
+### Overview
+The Retro App is completly written in Typescript that uses Nodejs runtime, ReactJs framework, SocketIO and MongoDB.
+### Installation
+Installing it in a single machines is pretty straightforward. You just need to build the application in the root directory using command `yarn build` and then run the application using `yarn start`. After doing this you can navigate to **localhost:3000** to see the application in action. 
+> Note: Don't forget to run the mongodb and set an environment variable named as DB_URL=mongodb://<YOUR DB URL>/<YOUR DB NAME>, if this variable is not set application will try to connect to **mongodb://localhost:27017/the-retro-app**.
+Coming Soon: Docker based deployement documentation is coming soon. Stay Tuned !
+
+### Maintainers
+- [Ajit Singh](https://github.com/as-ajitsingh)
+- [Saptarshi Deb](https://github.com/sap7deb)
+- [Amitesh Arya](https://github.com/amiteshtoharya4)
+
+### Roadmap
+Will be updated soon.
+
+### Contributing
+Will be updated soon.
+
+### License 
+[MIT License](/LICENSE)
