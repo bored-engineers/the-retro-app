@@ -5,6 +5,8 @@
 
 Long Version: The Retro App is an open source applicaiton developed by a bunch on enthusiatic developers ([Bored Engineers](https://github.com/orgs/bored-engineers/people)) in order to provide a solution to online Retrospective Meetings. To use this application you can navigate to <https://theretroapp.com>
 
+![THERETROAPP REPL](https://github.com/bored-engineers/the-retro-app/blob/master/docs/The_retro_app.gif)
+
 This guide will help you deploying your own instance of The Retro App.
 
 ## Table of Contents
