@@ -36,7 +36,10 @@ boardRouter.post('/join/:boardId', async (req: Request, res: Response, next: Nex
 
 boardRouter.get('/:boardId/export', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.send(await cardService.listCard(req.params.boardId));
+    res.send({
+      boardId: req.params.boardId,
+      cards: (await cardService.listCard(req.params.boardId)).map(card => ({ ...card, votes: card.votes.length }))
+    });
   } catch (e) {
     next(e);
   }
