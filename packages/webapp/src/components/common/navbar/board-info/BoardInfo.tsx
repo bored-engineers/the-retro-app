@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
-import { exportBoard } from '../../../../services/board.service'
+import exportBoard from '../../../../services/export-board.service';
 import Button from '@material-ui/core/Button';
 import { ButtonGroup, Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@material-ui/core';
 import PictureAsPdfRoundedIcon from '@material-ui/icons/PictureAsPdfRounded';

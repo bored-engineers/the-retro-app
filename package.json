@@ -4,11 +4,12 @@
   "description": "This repo contains main codebase for the retro app",
   "repository": "https://as-ajitsingh:leo%401508%241@github.com/bored-engineers/the-retro-app.git",
   "author": "Bored Engineers",
-  "private":"true",
+  "private": "true",
   "license": "MIT",
   "scripts": {
-    "build":"sh scripts/build-all.sh",
-    "start":"node dist/index.js"
+    "build": "sh scripts/build-all.sh",
+    "test": "yarn lerna run test --stream",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "lerna": "^3.22.1"
