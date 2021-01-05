@@ -55,7 +55,6 @@ const addHorizontalRuler = (pdf: jsPDF, x1: number, width: number) => {
 
 const exportBoard = async (boardID: any) => {
     const boardData = await getBoardData(boardID);
-    console.log(boardData);
 
     const pdf = new jsPDF({ unit: 'px', orientation: 'p', format: 'a4' });
 

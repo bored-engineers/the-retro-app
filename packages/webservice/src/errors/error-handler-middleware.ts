@@ -19,8 +19,6 @@ const getErrorResponse = (error) => {
 };
 
 export default (error: Error, _req: Request, res: Response, _next: NextFunction) => {
-  console.log(error);
-
   const errorResponse: ErrorResponse = getErrorResponse(error);
 
   res.status(errorResponse.status).send({ message: errorResponse.message, code: errorResponse.status });
