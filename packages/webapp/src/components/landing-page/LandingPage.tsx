@@ -1,27 +1,25 @@
-import { v4 as uuid } from 'uuid';
-import React, { useState, useEffect } from 'react';
-import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { TState, TAction } from '../../store/interfaces';
+import {v4 as uuid} from 'uuid';
+import React, {useEffect, useState} from 'react';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
+import {TAction, TState} from '../../store/interfaces';
 import * as ActionTypes from '../../store/actions';
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import Input from '@material-ui/core/Input'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import FormHelperText from '@material-ui/core/FormHelperText'
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useHistory, useLocation } from 'react-router';
-
-import { createBoard, joinBoard } from '../../services/board.service';
+import {useHistory, useLocation} from 'react-router';
+import {createBoard, joinBoard} from '../../services/board.service';
 import './LandingPage.scss';
-import boardImage from '../../assets/board.svg';
-import { getUserIDStorageKey } from '../../common-utils';
-import { Box, Link } from '@material-ui/core';
+import {getUserIDStorageKey} from '../../common-utils';
+import {Input, LinearProgress, Link} from '@material-ui/core';
+import LogoImage from '../../assets/Logo.png'
+import MainImage from '../../assets/main-image.svg'
+import IconButton from '@material-ui/core/IconButton';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import Divider from '@material-ui/core/Divider';
+import {makeStyles} from '@material-ui/core/styles';
 
 type TLandingPageDispatchProps = {
     setUserId: Function,
@@ -35,8 +33,35 @@ type TLandingPageStateProps = {
 
 type TLandingPageProps = TLandingPageDispatchProps & TLandingPageStateProps;
 
+const useStyles = makeStyles(theme => ({
+    mainImageContainer: {
+        position: 'relative',
+        '&::before': {
+            content: '""',
+            left: '7.5vw',
+            top: '-1vh',
+            position: 'absolute',
+            width: '6vw',
+            height: '6vw',
+            borderRadius: '6vw',
+            backgroundColor: '#F2F2F2',
+            zIndex: '-5',
+            animation: '$grow 10s infinite'
+        },
+        [theme.breakpoints.down("sm")]: {
+            display: 'none'
+        }
+    },
+    '@keyframes grow': {
+        '0%': {transform: 'scale(0.5)'},
+        '50%': {transform: 'scale(1)'},
+        '100%': {transform: 'scale(0.5)'}
+    }
+}))
+
 
 const LandingPage = (props: TLandingPageProps) => {
+    const classes = useStyles();
     const {setUserId, setBoardId, boardId} = props;
     const browserHistory = useHistory();
     const location = useLocation();
@@ -119,7 +144,7 @@ const LandingPage = (props: TLandingPageProps) => {
 
     function Branding() {
         return (
-            <Typography variant="body2" color="textSecondary" align="center">
+            <Typography variant="body1" color="textSecondary" align="center">
             {'From the minds of '}
             <Link color="primary" href="https://github.com/orgs/bored-engineers/people" target="_black">
            <b>Bored Engineers</b>
@@ -127,43 +152,63 @@ const LandingPage = (props: TLandingPageProps) => {
           </Typography>
         );
       }
+
     return (
         <React.Fragment>
-            <Grid container direction="column" justify="center" alignItems="center" className="landingPage">
-                <Card className='form'>
-                    <CardContent>
-                        <Typography className='title-sup' color="textSecondary" gutterBottom>
-                            Welcome to
-                        </Typography>
-                        <Typography variant="h5" component="h2" className="title-main">
-                            The Retro App
-                        </Typography>
-                    </CardContent>
-                    <div className="image"><img src={boardImage} alt="" /></div>
-                    <div className="create-board">
-                        <Button variant="contained" color="primary" onClick={createBoardHandler} disabled={createBoardProgress} >Create a New Board</Button>
-                        {createBoardProgress && <LinearProgress />}
-                        {createBoardError && <FormHelperText error>There is some problem creating board. Try Again Later...</FormHelperText>}
-                        {createBoardSuccess && getSuccessElements()}
-                    </div>
-                    <Divider variant="middle" flexItem />
-                    <div className="join-board">
-                        <Typography className='join-board-title' color="textSecondary" gutterBottom >
-                            Join an existing board
-                        </Typography>
-                        <FormControl fullWidth>
-                            <InputLabel htmlFor="boardId" variant="standard" margin="dense">Board ID</InputLabel>
-                            <Input id="boardId" fullWidth value={boardId} onChange={event => setBoardId(event.target.value)} disabled={createBoardProgress || joinBoardProgress} error={joinBoardError.errorField === 'boardId'} />
-                        </FormControl>
-                        <Button variant="contained" color="primary" onClick={joinBoardHandler} disabled={createBoardProgress || joinBoardProgress} >Join Now</Button>
-                        {joinBoardProgress && <LinearProgress />}
-                        {joinBoardError && <FormHelperText error>{joinBoardError.message}</FormHelperText>}
-                    </div>
-                    <Box mt={2} className="footer">
-                        <Branding />
-                    </Box>
-                </Card>
+            <div className="ocean">
+                <div className="wave"></div>
+            </div>
+            <Grid container className="main" justify="space-between" direction="column">
+                <Grid container item justify="space-between" direction="row">
+                    <Grid item sm={6}><img src={LogoImage} alt="logo" width="256" height="60"/></Grid>
+                    <Grid container item sm={6} direction="row-reverse">
+                        <IconButton><TwitterIcon fontSize="large"/></IconButton>
+                        <IconButton><FacebookIcon fontSize="large"/></IconButton>
+
+                    </Grid>
+                </Grid>
+                <Grid container item className="row" justify="space-evenly" direction="row">
+                    <Grid container md={6} item justify="center" className={classes.mainImageContainer}>
+                        <img className="main-image" src={MainImage} alt="main" width="550"/>
+                    </Grid>
+                    <Grid container md={6} item justify="center">
+                        <div className="form">
+                            <Typography variant="h5">Let's get started...</Typography>
+                            <Button
+                                className="button"
+                                variant="contained"
+                                color="primary"
+                                onClick={createBoardHandler}
+                                disabled={createBoardProgress}
+                            >Create New Board</Button>
+                            {createBoardProgress && <LinearProgress />}
+                            {createBoardError && <FormHelperText error>There is some problem creating board. Try Again Later...</FormHelperText>}
+                            {createBoardSuccess && getSuccessElements()}
+                            <Divider/>
+                            <Typography className="join-text">Or Join An Existing Board</Typography>
+                            <Input
+                                className="input" placeholder="Board Id"
+                                value={boardId}
+                                onChange={event => setBoardId(event.target.value)}
+                                disabled={createBoardProgress || joinBoardProgress}
+                                error={joinBoardError.errorField === 'boardId'}/>
+                            <Button className="button"
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={joinBoardHandler}
+                                    disabled={createBoardProgress || joinBoardProgress}
+                            >Join Now</Button>
+                            {joinBoardProgress && <LinearProgress/>}
+                            {joinBoardError && <FormHelperText error>{joinBoardError.message}</FormHelperText>}
+                            <Typography variant="caption" className="caption">By joining, I agree to the Terms and
+                                Privacy Policy.</Typography>
+                        </div>
+                    </Grid>
+                </Grid>
+                <Grid container item/>
+                <Grid container item justify="flex-end"><Branding/></Grid>
             </Grid>
+
         </React.Fragment>
     );
 }

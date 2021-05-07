@@ -1,81 +1,99 @@
-.landingPage{
-    background-image: url(https://source.unsplash.com/user/bored_engineer/likes);
-    background-repeat: no-repeat;
-    background-size:  cover;
-    background-position: center;
-    width: 100%;
+.main {
+    flex-grow: 1;
+    width:100%;
     height: 100%;
-    overflow: hidden;
-    .form{
-        max-width: 30em;
-        // background-color: transparentize($color:black, $amount: 0.5);
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        padding: 2vh 5vh;
-        .title-sup{
-            font-size: 14;
+    padding: 46px 65px;
+    z-index: 10;
+    flex-wrap: nowrap !important;
+}
 
-        }
-        .title-main{
-            align-self: center;
-        }
-        .image {
-            width: 15em;
-            img {
-              width: 100%;
-              height: 100%;
-            }
-        }
-        .create-board{
-            margin-top: 5vh;
-            margin-bottom: 1vh;
-            width: 100%;
+.row{
+    align-items: center;
+}
 
-            Button{
-                width: 100%;
-                margin-bottom: 1vh;
-            }
-        }
+.main-image{
+    width: 35vw;
+}
 
-        .join-board{
-            width: 100%;
-            margin-bottom: 2vh;
 
-            .join-board-title{
-                text-align: center;
-            }
-            Button{
-                margin-top: 2vh;
-                margin-bottom: 1vh;
-                width: 100%;
+.form{
+    height: 100%;
+    width: 400px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    justify-content: space-evenly;
+    padding: 0px 30px;
+}
 
-            }
-        }
-        hr {
-            width: 100%;
-            border: none;
-            border-top: 1px solid #333;
-            color: #333;
-            overflow: visible;
-            text-align: center;
-            height: 1px;
-            margin: 20px;
-            align-self: center;
+.form > * {
+    margin-top: 30px !important;
+}
 
-            &:after {
-                width: 100%;
-                background: #fff;
-                content: 'or';
-                padding: 0 4px;
-                position: relative;
-                top: -13px;
-                
-            }
-        }
-        .footer{
-            margin: 0% !important
-        }
-        
+.join-text{
+    text-align: center;
+    color: #5a5858;
+}
+
+.input{
+    margin-top: 50px !important;
+}
+
+.button{
+    height: 50px;
+    background-color: #3E64C7;
+}
+
+.caption{
+    text-align: center;
+    margin-bottom: 20px !important;
+}
+
+.ocean {
+    z-index: -5;
+    height: 20%;
+    width:100%;
+    position:absolute;
+    bottom:0;
+    left:0;
+    background: #FF6584;
+}
+
+.wave {
+    z-index: -5;
+    background: url(../../assets/waves.svg) repeat-x;
+    position: absolute;
+    top: -198px;
+    width: 6400px;
+    height: 250px;
+    animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
+    transform: translate3d(0, 0, 0);
+}
+
+.wave:nth-of-type(2) {
+    z-index: -5;
+    top: -175px;
+    animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+    opacity: 0.7;
+}
+
+@keyframes wave {
+    0% {
+        margin-left: 0;
+    }
+    100% {
+        margin-left: -1600px;
+    }
+}
+
+@keyframes swell {
+    0%, 100% {
+        transform: translate3d(0,-25px,0);
+    }
+    50% {
+        transform: translate3d(0,5px,0);
     }
 }
