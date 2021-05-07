@@ -4,7 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from 'react-router';
-import HomeLogo from '../../../assets/Logo.png';
+import HomeLogo from '../../../assets/Logo-old.png';
 import BoardInfo from './board-info/BoardInfo';
 
 import './Navbar.scss';

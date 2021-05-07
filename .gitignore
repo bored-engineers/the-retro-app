@@ -110,3 +110,5 @@ dist
 **/build/
 
 packages/webservice/src/public
+
+.idea
