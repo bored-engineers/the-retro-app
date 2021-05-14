@@ -9,12 +9,16 @@
   "scripts": {
     "build": "sh scripts/build-all.sh",
     "test": "yarn lerna run test --stream",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "audit:fix": "yarn-audit-fix"
   },
   "dependencies": {
     "lerna": "^3.22.1"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "yarn-audit-fix": "^4.3.5"
+  }
 }
