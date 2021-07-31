@@ -20,10 +20,14 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import Divider from '@material-ui/core/Divider';
 import {makeStyles} from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
+import classNames from 'classnames';
+import {wakeUpServer} from '../../services/common';
 
 type TLandingPageDispatchProps = {
     setUserId: Function,
-    setBoardId: Function
+    setBoardId: Function,
+    addToastMessage: Function
 }
 
 type TLandingPageStateProps = {
@@ -32,6 +36,10 @@ type TLandingPageStateProps = {
 }
 
 type TLandingPageProps = TLandingPageDispatchProps & TLandingPageStateProps;
+
+enum ServerStatus {
+    DOWN,UP, WAKING
+}
 
 const useStyles = makeStyles(theme => ({
     mainImageContainer: {
@@ -69,9 +77,27 @@ const LandingPage = (props: TLandingPageProps) => {
     const [createBoardProgress, setCreateBoardProgress] = useState(false);
     const [createBoardSuccess, setCreateBoardSuccess] = useState(false);
     const [createBoardError, setCreateBoardError] = useState(false);
+    const [serverStatus, setServerStatus] = useState<ServerStatus>(ServerStatus.DOWN);
 
     const [joinBoardProgress, setJoinBoardProgress] = useState(false);
     const [joinBoardError, setJoinBoardError] = useState({ errorField: '', message: '' });
+
+    const [error, setError] = useState();
+
+    useEffect(()=>{
+        props.addToastMessage(error);
+    }, [error, props]);
+
+    useEffect(()=>{
+        setServerStatus(ServerStatus.WAKING);
+        wakeUpServer().then(result => {
+            if (result) setServerStatus(ServerStatus.UP)
+            else setServerStatus(ServerStatus.DOWN);
+        }).catch(e => {
+            setServerStatus(ServerStatus.DOWN);
+            setError(e.message);
+        })
+    }, []);
 
     const createBoardHandler = () => {
         setCreateBoardProgress(true);
@@ -171,7 +197,7 @@ const LandingPage = (props: TLandingPageProps) => {
                     <Grid container md={6} item justify="center" className={classes.mainImageContainer}>
                         <img className="main-image" src={MainImage} alt="main" width="550"/>
                     </Grid>
-                    <Grid container md={6} item justify="center">
+                    <Grid container md={6} item justify="center" className="form-container">
                         <div className="form">
                             <Typography variant="h5">Let's get started...</Typography>
                             <Button
@@ -179,7 +205,7 @@ const LandingPage = (props: TLandingPageProps) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={createBoardHandler}
-                                disabled={createBoardProgress}
+                                disabled={createBoardProgress || serverStatus!==ServerStatus.UP}
                             >Create New Board</Button>
                             {createBoardProgress && <LinearProgress />}
                             {createBoardError && <FormHelperText error>There is some problem creating board. Try Again Later...</FormHelperText>}
@@ -190,20 +216,29 @@ const LandingPage = (props: TLandingPageProps) => {
                                 className="input" placeholder="Board Id"
                                 value={boardId}
                                 onChange={event => setBoardId(event.target.value)}
-                                disabled={createBoardProgress || joinBoardProgress}
+                                disabled={createBoardProgress || joinBoardProgress || serverStatus!==ServerStatus.UP}
                                 error={joinBoardError.errorField === 'boardId'}/>
                             <Button className="button"
                                     variant="contained"
                                     color="primary"
                                     onClick={joinBoardHandler}
-                                    disabled={createBoardProgress || joinBoardProgress}
+                                    disabled={createBoardProgress || joinBoardProgress || serverStatus!==ServerStatus.UP}
                             >Join Now</Button>
                             {joinBoardProgress && <LinearProgress/>}
                             {joinBoardError && <FormHelperText error>{joinBoardError.message}</FormHelperText>}
                             <Typography variant="caption" className="caption">By joining, I agree to the Terms and
                                 Privacy Policy.</Typography>
+                            <div className={classNames({
+                                'loading-no-display': serverStatus===ServerStatus.UP,
+                                loading: true
+                            })} >
+                                <CircularProgress/>
+                                <Typography variant='body1'> Waking Up servers. Please wait...</Typography>
+                            </div>
                         </div>
+
                     </Grid>
+
                 </Grid>
                 <Grid container item/>
                 <Grid container item justify="flex-end"><Branding/></Grid>
@@ -224,6 +259,7 @@ const mapDispatchToProps = (dispatch: Dispatch<TAction>): TLandingPageDispatchPr
     return {
         setBoardId: (boardId: string) => dispatch({ type: ActionTypes.SET_BOARDID, boardId }),
         setUserId: (userId: string) => dispatch({ type: ActionTypes.SET_USERID, userId }),
+        addToastMessage: (message: string) => dispatch({ type: ActionTypes.ADD_TOAST_MESSAGE, message })
     }
 }
 

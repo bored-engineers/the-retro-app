@@ -3,13 +3,14 @@
         "module": "commonjs",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
         "target": "es6",
         "noImplicitAny": false,
         "moduleResolution": "node",
         "sourceMap": false,
         "removeComments": true,
         "outDir": "dist",
-        "baseUrl": ".",
+        "baseUrl": "."
     },
     "include": [
         "src/**/*.ts"
