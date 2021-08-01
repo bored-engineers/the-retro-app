@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { Grid, Typography, Button, Box, ButtonGroup, Popper, Paper, ClickAwayListener, Tooltip } from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
+import {Box, Button, ButtonGroup, ClickAwayListener, Grid, Paper, Popper, Tooltip, Typography} from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import GoodMoodIcon from '@material-ui/icons/Mood';
 import BadMoodIcon from '@material-ui/icons/MoodBad';
 import ActionItemIcon from '@material-ui/icons/PlaylistAddCheck';
 import AppreciationIcon from '@material-ui/icons/Stars';
 import AddIcon from '@material-ui/icons/AddCircle';
-import { TAction, TState, ConnectionStatus } from '../../store/interfaces';
+import {ConnectionStatus, TAction, TState} from '../../store/interfaces';
 import * as ActionTypes from '../../store/actions';
 import Navbar from '../common/navbar/Navbar';
 import NoteForm from './note-form/NoteForm';
@@ -21,7 +21,7 @@ import PresentToAllIcon from '@material-ui/icons/PresentToAll';
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 
 import './Board.scss';
-import { getUserIDStorageKey } from '../../common-utils';
+import {getUserIDStorageKey} from '../../common-utils';
 import Footer from '../common/footer/Footer';
 
 type NoteType = { category: string, text: string, boardId: string, cardId: string, votes: string[] };
@@ -147,10 +147,11 @@ const Boards = ({
             <Box display="flex" borderBottom={1} boxShadow={1} className="toolbar-box">
                 <Box display="flex" flexGrow={1} flexDirection="row">
                     <Button size="small" variant="outlined" className={isSafe ? "safety-success" : "safety-failure"} onClick={onSafetyResultClickHandler}> Safety Result: {isSafe ? 'Safe' : 'Unsafe'} <InfoOutlinedIcon className='safety-result-info' /></Button>
-                    <Typography className='safety-score-info'></Typography>
-                    <Popper id={id} open={open} anchorEl={anchorEl}>
+                    <Typography className="safety-score-info"/>
+                    <Popper id={id} open={open} anchorEl={anchorEl} className="safety-chat-popper">
                         <ClickAwayListener onClickAway={onSafetyCheckClickAway}>
-                            <Paper variant='elevation' elevation={3} className='safety-graph'><SafetyChart data={safetyScores} /></ Paper>
+                            <Paper variant="elevation" elevation={3} className="safety-graph"><SafetyChart
+                                data={safetyScores}/></ Paper>
                         </ClickAwayListener>
                     </Popper>
                 </Box>
