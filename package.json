@@ -9,7 +9,7 @@
   "scripts": {
     "build": "sh scripts/build-all.sh",
     "test": "yarn lerna run test --stream",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "audit:fix": "yarn-audit-fix"
   },
   "dependencies": {

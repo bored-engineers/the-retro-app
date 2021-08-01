@@ -112,3 +112,5 @@ dist
 packages/webservice/src/public
 
 .idea
+
+.firebase/*

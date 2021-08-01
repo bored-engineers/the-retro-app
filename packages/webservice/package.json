@@ -15,7 +15,7 @@
     "lint": "eslint src --ext .ts",
     "test": "jest",
     "start:dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/src/index.js"
   },
   "standard": {
     "env": [
