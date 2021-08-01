@@ -10,7 +10,10 @@ const server = express();
 
 MongoDB();
 
-server.use(cors());
+server.use(cors({
+  origin: 'https://theretroapp.com',
+  optionsSuccessStatus: 200
+}));
 server.use(bodyParser.json());
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/api', mainRouter);
